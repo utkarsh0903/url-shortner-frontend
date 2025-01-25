@@ -21,6 +21,7 @@
       flex-direction: column;
       justify-content: center;
       .active {
+        width: 13em;
         background-color: #f3f7fd;
         button {
           color: #1b48da;
@@ -29,6 +30,7 @@
       li {
         padding-left: 1em;
         margin-right: 2em;
+        margin-bottom: 0.5em;
         list-style: none;
         height: 3.1em;
         display: flex;
@@ -56,11 +58,12 @@
   .settings-btn {
     display: flex;
     align-items: center;
-    margin-left: 2em;
+    margin-left: 1em;
     height: 6em;
     border-top: 2px solid #f6f6f9;
     border-bottom: 2px solid #f6f6f9;
     button {
+      margin-left: 1em;
       cursor: pointer;
       background-color: transparent;
       border: none;
@@ -188,7 +191,7 @@
           position: absolute;
           right: 2em;
           border: 1px solid #ececf2;
-          background-color: #FFFFFF;
+          background-color: #ffffff;
           width: 5em;
           height: 2em;
           display: flex;
@@ -214,5 +217,17 @@
     height: 87vh;
     border-top: 2px solid #f6f6f9;
     border-left: 2px solid #f6f6f9;
+  }
+}
+
+.active-tab {
+    background-color: #f3f7fd;
+    height: 3.1em;
+    display: flex;
+    align-items: center;
+    border-radius: 6px;
+    width: 13em;
+  button {
+    color: #1b48da !important;
   }
 }

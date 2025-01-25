@@ -1,0 +1,59 @@
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  margin: 6em 0 3em 3em;
+  label {
+    display: inline-block;
+    width: 5em;
+    margin-right: 1em;
+    font-family: "Manrope", serif;
+    font-size: 1em;
+    line-height: 19.12px;
+    color: #181820;
+  }
+  input {
+    border: 1px solid #ececf2;
+    height: 1.99em;
+    width: 18em;
+    border-radius: 6px;
+  }
+  .edit-name {
+    margin-left: 9rem;
+    margin-top: 1.5em;
+  }
+  .edit-email {
+    margin-left: 9rem;
+    margin-top: 1.5em;
+  }
+  .edit-mobile {
+    margin-left: 9rem;
+    margin-top: 1.5em;
+  }
+  .save-btn {
+    width: 25.1em;
+    margin-left: 9rem;
+    margin-top: 2.5em;
+    height: 1.99em;
+    background-color: #1b48da;
+    border: none;
+    border-radius: 6px;
+    color: #ffffff;
+    font-family: "Manrope", serif;
+    font-size: 0.84rem;
+    line-height: 19.12px;
+  }
+  .delete-btn {
+    cursor: pointer;
+    width: 25.1em;
+    margin-left: 9rem;
+    margin-top: 1.5em;
+    height: 1.99em;
+    background-color: #eb0d0d;
+    border: none;
+    border-radius: 6px;
+    color: #ffffff;
+    font-family: "Manrope", serif;
+    font-size: 0.84rem;
+    line-height: 19.12px;
+  }
+}

@@ -8,10 +8,25 @@ import settingsIcon from "../assets/settings-icon.png";
 import sun from "../assets/sun.png";
 import searchIcon from "../assets/search.png";
 import plus from "../assets/plus.png";
+import { useNavigate } from "react-router";
+import blueDashboard from "../assets/blue-dashboard.png";
+import blueLinks from "../assets/blue-links.png";
+import blueAnalytics from "../assets/blue-analytics.png";
+import blueSettings from "../assets/blue-settings.png";
+import Data from "../components/Data";
+import Links from "../components/Links";
+import Analytics from "../components/Analytics";
+import Settings from "../components/Settings";
 
 const Dashboard = () => {
+  const [showLogoutBtn, setShowLogoutBtn] = useState(false);
+  const [activeTab, setActiveTab] = useState("dashboard");
+  const navigate = useNavigate();
 
-    const [showLogoutBtn, setShowLogoutBtn] = useState(false);
+  const handleLogout = () => {
+    localStorage.clear("token");
+    navigate("/");
+  };
 
   return (
     <div className="dashboard-container">
@@ -19,31 +34,45 @@ const Dashboard = () => {
         <img className="logo" src={logo} alt="Logo" />
         <nav className="navbar">
           <ul>
-            <li className="active">
-              <button>
-                <img src={dashboardIcon} alt="Dashboard Icon" />
+            <li className={activeTab == "dashboard" ? "active" : ""}>
+              <button onClick={() => setActiveTab("dashboard")}>
+                <img
+                  src={activeTab == "dashboard" ? blueDashboard : dashboardIcon}
+                  alt="Dashboard Icon"
+                />
                 Dashboard
               </button>
             </li>
-            <li>
-              <button>
-                <img src={linksIcon} alt="Links Icon" />
+            <li className={activeTab == "links" ? "active" : ""}>
+              <button onClick={() => setActiveTab("links")}>
+                <img
+                  src={activeTab == "links" ? blueLinks : linksIcon}
+                  alt="Links Icon"
+                />
                 Links
               </button>
             </li>
-            <li>
-              <button>
-                <img src={analyticsIcon} alt="Analytics Icon" />
+            <li className={activeTab == "analytics" ? "active" : ""}>
+              <button onClick={() => setActiveTab("analytics")}>
+                <img
+                  src={activeTab == "analytics" ? blueAnalytics : analyticsIcon}
+                  alt="Analytics Icon"
+                />
                 Analytics
               </button>
             </li>
           </ul>
         </nav>
         <div className="settings-btn">
-          <button>
-            <img src={settingsIcon} alt="Settings Icon" />
-            Settings
-          </button>
+          <div className={activeTab == "settings" ? "active-tab " : ""}>
+            <button onClick={() => setActiveTab("settings")}>
+              <img
+                src={activeTab == "settings" ? blueSettings : settingsIcon}
+                alt="Settings Icon"
+              />
+              Settings
+            </button>
+          </div>
         </div>
       </div>
       <div className="content-section">
@@ -71,18 +100,28 @@ const Dashboard = () => {
                 placeholder="Search by links"
               ></input>
             </div>
-            <div class="name-initials">
-              <button className="profile-btn" onClick={() => setShowLogoutBtn(!showLogoutBtn)}>UG</button>
-              { showLogoutBtn &&
-                <div class="dropdown-content">
-                  <button className="logout-btn">Logout</button>
+            <div className="name-initials">
+              <button
+                className="profile-btn"
+                onClick={() => setShowLogoutBtn(!showLogoutBtn)}
+              >
+                UG
+              </button>
+              {showLogoutBtn && (
+                <div className="dropdown-content">
+                  <button className="logout-btn" onClick={() => handleLogout()}>
+                    Logout
+                  </button>
                 </div>
-              }
+              )}
             </div>
           </div>
         </div>
         <div className="hero-section">
-          <h2>Hero Section</h2>
+          {activeTab == "dashboard" && <Data />}
+          {activeTab == "links" && <Links />}
+          {activeTab == "analytics" && <Analytics />}
+          {activeTab == "settings" && <Settings />}
         </div>
       </div>
     </div>
