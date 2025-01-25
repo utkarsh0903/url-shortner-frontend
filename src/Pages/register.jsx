@@ -4,6 +4,7 @@ import "../styles/register.css";
 import { register } from "../services/index";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
+import halfBg from "../assets/half-bg.png";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -44,20 +45,27 @@ const Register = () => {
 
   return (
     <div className="home-container">
-      <div className="right-container">
-        <div className="logo">
-          <img src={logo} alt="" />
-        </div>
-      </div>
       <div className="left-container">
+        <img className="logo" src={logo} alt="Logo" />
+        <img className="half-bg" src={halfBg} alt="halfBg" />
+      </div>
+      <div className="right-container">
         <div className="top-btns">
-          <button>SignUp</button>
-          <button>LogIn</button>
+          <button className="signup-btn btn">
+            <Link to="/" className="signup-link">
+              SignUp
+            </Link>
+          </button>
+          <button className="login-btn btn">
+            <Link to="/login" className="login-link">
+              Login
+            </Link>
+          </button>
         </div>
         <div className="heading">
           <h2>Join us Today!</h2>
         </div>
-        <form onSubmit={handleRegister}>
+        <form className="user-data" onSubmit={handleRegister}>
           <input
             type="text"
             name="username"

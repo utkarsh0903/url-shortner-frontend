@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Manrope&display=swap");
 
-.home-container {
+.login-container {
   display: flex;
   width: 100%;
   height: 100vh;
@@ -66,9 +66,10 @@
     height: 7%;
     margin-left: 4em;
     margin-top: 3em;
+    margin-bottom: 3em;
     width: 16em;
     h2 {
-      letter-spacing: 0.2em;
+      letter-spacing: 0.15em;
       font-family: "Manrope", serif;
       font-size: 1em;
       font-weight: 600;
@@ -99,7 +100,7 @@
         line-height: 24.59px;
       }
     }
-    .register-btn {
+    .login-btn {
       cursor: pointer;
       font-family: "Manrope", serif;
       font-size: 1em;
@@ -113,7 +114,7 @@
       border-radius: 6px;
     }
   }
-  .login-request {
+  .signup-request {
     height: 20%;
     margin-left: 4em;
     width: 73%;
