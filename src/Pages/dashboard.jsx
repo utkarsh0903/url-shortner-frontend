@@ -8,10 +8,17 @@ import settingsIcon from "../assets/settings-icon.png";
 import sun from "../assets/sun.png";
 import searchIcon from "../assets/search.png";
 import plus from "../assets/plus.png";
+import { useNavigate } from "react-router";
 
 const Dashboard = () => {
 
     const [showLogoutBtn, setShowLogoutBtn] = useState(false);
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.clear("token");
+        navigate("/");
+      };
 
   return (
     <div className="dashboard-container">
@@ -71,11 +78,11 @@ const Dashboard = () => {
                 placeholder="Search by links"
               ></input>
             </div>
-            <div class="name-initials">
+            <div className="name-initials">
               <button className="profile-btn" onClick={() => setShowLogoutBtn(!showLogoutBtn)}>UG</button>
               { showLogoutBtn &&
-                <div class="dropdown-content">
-                  <button className="logout-btn">Logout</button>
+                <div className="dropdown-content">
+                  <button className="logout-btn" onClick={() => handleLogout()}>Logout</button>
                 </div>
               }
             </div>
