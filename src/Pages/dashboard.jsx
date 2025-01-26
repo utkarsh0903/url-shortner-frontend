@@ -18,12 +18,16 @@ import Links from "../components/Links";
 import Analytics from "../components/Analytics";
 import Settings from "../components/Settings";
 import { getUser } from "../services";
+import CreateLinkModal from "../components/CreateLinkModal";
 
 const Dashboard = () => {
   const [showLogoutBtn, setShowLogoutBtn] = useState(false);
+  const [isCreateLinkModalOpen, setIsCreateLinkModalOpen] = useState(false);
   const [activeUser, setActiveUser] = useState("");
   const [shortName, setShortName] = useState("");
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [currentDate, setCurrentDate] = useState("");
+  const [helloMessage, setHelloMessage] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,6 +37,24 @@ const Dashboard = () => {
       return;
     }
     showUserDetails();
+    const todayDate = new Date();
+    const date = todayDate.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+    });
+    setCurrentDate(date);
+
+    const currentTime = todayDate.getHours();
+    if (currentTime >= 5 && currentTime < 12) {
+      setHelloMessage("Good Morning");
+    } else if (currentTime >= 12 && currentTime < 17) {
+      setHelloMessage("Good Afternoon");
+    } else if (currentTime >= 17 && currentTime < 20) {
+      setHelloMessage("Good Evening");
+    } else {
+      setHelloMessage("Good Night");
+    }
   }, []);
 
   const showUserDetails = async () => {
@@ -113,17 +135,24 @@ const Dashboard = () => {
           <div className="hello-message">
             <img src={sun} alt="sun" />
             <div className="current-data">
-              <p>Good morning, {activeUser.username}</p>
-              <p>Thu, Jan 25</p>
+              <p>
+                {helloMessage}, {activeUser.username}
+              </p>
+              <p>{currentDate}</p>
             </div>
           </div>
 
           <div className="navbar-info">
             <div className="create-new-btn">
-              <button>
+              <button
+                onClick={() => {
+                  setIsCreateLinkModalOpen(true);
+                }}
+              >
                 <img src={plus} alt="Plus" />
                 Create new
               </button>
+              {isCreateLinkModalOpen && <CreateLinkModal setIsCreateLinkModalOpen={setIsCreateLinkModalOpen} />}
             </div>
             <div className="search-input">
               <img src={searchIcon} alt="Search Icon" />
@@ -155,7 +184,11 @@ const Dashboard = () => {
           {activeTab == "links" && <Links />}
           {activeTab == "analytics" && <Analytics />}
           {activeTab == "settings" && (
-            <Settings activeUser={activeUser} setActiveUser={setActiveUser} updateShortName={updateShortName} />
+            <Settings
+              activeUser={activeUser}
+              setActiveUser={setActiveUser}
+              updateShortName={updateShortName}
+            />
           )}
         </div>
       </div>

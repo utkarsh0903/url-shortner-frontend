@@ -31,7 +31,6 @@ const Settings = ({ activeUser, setActiveUser, updateShortName }) => {
     }
     const res = await updateUser(updatedFields);
     if (res.status === 200) {
-      console.log(nameChanged);
       if(nameChanged) updateShortName(updatedFields.username);
       if (emailChanged) {
         localStorage.clear("token");
