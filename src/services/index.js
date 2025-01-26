@@ -1,4 +1,5 @@
-const URL = 'http://localhost:8000/api'
+// const URL = 'http://localhost:8000/api'
+const URL = 'https://url-shortner-eqti.onrender.com/api'
 
 export const register = (data) => {
     return fetch(`${URL}/user/register`, {
