@@ -18,9 +18,11 @@ import Links from "../components/Links";
 import Analytics from "../components/Analytics";
 import Settings from "../components/Settings";
 import { getUser } from "../services";
+import CreateLinkModal from "../components/CreateLinkModal";
 
 const Dashboard = () => {
   const [showLogoutBtn, setShowLogoutBtn] = useState(false);
+  const [isCreateLinkModalOpen, setIsCreateLinkModalOpen] = useState(false);
   const [activeUser, setActiveUser] = useState("");
   const [shortName, setShortName] = useState("");
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -133,17 +135,24 @@ const Dashboard = () => {
           <div className="hello-message">
             <img src={sun} alt="sun" />
             <div className="current-data">
-              <p>{helloMessage}, {activeUser.username}</p>
+              <p>
+                {helloMessage}, {activeUser.username}
+              </p>
               <p>{currentDate}</p>
             </div>
           </div>
 
           <div className="navbar-info">
             <div className="create-new-btn">
-              <button>
+              <button
+                onClick={() => {
+                  setIsCreateLinkModalOpen(true);
+                }}
+              >
                 <img src={plus} alt="Plus" />
                 Create new
               </button>
+              {isCreateLinkModalOpen && <CreateLinkModal setIsCreateLinkModalOpen={setIsCreateLinkModalOpen} />}
             </div>
             <div className="search-input">
               <img src={searchIcon} alt="Search Icon" />
