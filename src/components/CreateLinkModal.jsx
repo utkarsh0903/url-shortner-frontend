@@ -1,14 +1,42 @@
 import React, { useState } from "react";
 import "../styles/createLinkModal.css";
 import close from "../assets/close.png";
+import { createShortLink } from "../services";
 
 const CreateLinkModal = ({ setIsCreateLinkModalOpen }) => {
   const [isSliderOn, setIsSliderOn] = useState(false);
+  const [inputData, setInputData] = useState({
+    originalURL: "",
+    remarks: "",
+    expiryDate: "",
+  });
 
   const handleSlider = () => {
     setIsSliderOn(!isSliderOn);
-    console.log(isSliderOn ? "Slider is OFF" : "Slider is ON");
   };
+
+  const handleCreate = async () => {
+    console.log(inputData);
+    const res = await createShortLink(inputData);
+    if (res.status === 200) {
+      const data = await res.json(res);
+      alert(data.message);
+      setIsCreateLinkModalOpen(false);
+    } else {
+      const data = await res.json(res);
+      alert(data.message);
+    }
+  };
+
+  const handleClear = () => {
+    setIsSliderOn(false);
+    setInputData({
+      originalURL: "",
+      remarks: "",
+      expiryDate: "",
+    });
+  };
+
   return (
     <div className="overlay">
       <div className="container">
@@ -24,11 +52,34 @@ const CreateLinkModal = ({ setIsCreateLinkModalOpen }) => {
           <label htmlFor="">
             Destination Url<span>*</span>
           </label>
-          <input type="text" placeholder="https://web.whatsapp.com/" required />
+          <input
+            type="text"
+            placeholder="https://web.whatsapp.com/"
+            name="originalURL"
+            value={inputData.originalURL}
+            onChange={(e) =>
+              setInputData({
+                ...inputData,
+                [e.target.name]: String(e.target.value),
+              })
+            }
+            required
+          />
           <label htmlFor="">
             Remarks<span>*</span>
           </label>
-          <textarea name="" id="" placeholder="Add remarks" required></textarea>
+          <textarea
+            placeholder="Add remarks"
+            name="remarks"
+            value={inputData.remarks}
+            onChange={(e) =>
+              setInputData({
+                ...inputData,
+                [e.target.name]: String(e.target.value),
+              })
+            }
+            required
+          ></textarea>
           <div className="link-expiry-slider">
             <label htmlFor="" className="link-expiration">
               Link Expiration
@@ -44,11 +95,25 @@ const CreateLinkModal = ({ setIsCreateLinkModalOpen }) => {
               <label htmlFor="active-slider" className="move-slider"></label>
             </div>
           </div>
-          <input type="date" />
+          <input
+            type="date"
+            name="expiryDate"
+            value={inputData.expiryDate}
+            onChange={(e) =>
+              setInputData({
+                ...inputData,
+                [e.target.name]: e.target.value,
+              })
+            }
+          />
         </div>
         <div className="bottom-section">
-          <button className="clear-btn">Clear</button>
-          <button className="create-link-btn">Create new</button>
+          <button className="clear-btn" onClick={() => handleClear()}>
+            Clear
+          </button>
+          <button className="create-link-btn" onClick={() => handleCreate()}>
+            Create new
+          </button>
         </div>
       </div>
     </div>
