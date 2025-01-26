@@ -32,7 +32,7 @@ const Dashboard = () => {
       navigate("/login");
     }
     showUserDetails();
-  }, []);
+  }, [activeUser]);
 
   const showUserDetails = async () => {
     const res = await getUser();

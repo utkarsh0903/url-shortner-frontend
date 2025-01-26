@@ -16,6 +16,10 @@
     height: 1.99em;
     width: 18em;
     border-radius: 6px;
+    padding-left: 1em;
+    &:focus{
+        outline: none;
+    }
   }
   .edit-name {
     margin-left: 9rem;
@@ -30,6 +34,7 @@
     margin-top: 1.5em;
   }
   .save-btn {
+    cursor: pointer;
     width: 25.1em;
     margin-left: 9rem;
     margin-top: 2.5em;

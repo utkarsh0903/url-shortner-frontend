@@ -20,9 +20,19 @@ export const login = (data) => {
     })
 }
 
-export const getUser = (data) => {
+export const getUser = () => {
     return fetch(`${URL}/user/`, {
         method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : `${localStorage.getItem('token')}`
+        }
+    })
+}
+
+export const updateUser = (data) => {
+    return fetch(`${URL}/user/update`, {
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
             'Authorization' : `${localStorage.getItem('token')}`
