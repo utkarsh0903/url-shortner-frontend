@@ -19,3 +19,14 @@ export const login = (data) => {
         body: JSON.stringify(data),
     })
 }
+
+export const getUser = (data) => {
+    return fetch(`${URL}/user/`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : `${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(data),
+    })
+}
