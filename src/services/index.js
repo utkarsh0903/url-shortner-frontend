@@ -62,3 +62,13 @@ export const createShortLink = (data) => {
         body: JSON.stringify(data),
     })
 }
+
+export const getUserLinks = () => {
+    return fetch(`${URL}/link/`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : `${localStorage.getItem('token')}`
+        }
+    })
+}
