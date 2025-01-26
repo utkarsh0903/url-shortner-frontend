@@ -17,11 +17,44 @@ import Data from "../components/Data";
 import Links from "../components/Links";
 import Analytics from "../components/Analytics";
 import Settings from "../components/Settings";
+import { getUser } from "../services";
 
 const Dashboard = () => {
   const [showLogoutBtn, setShowLogoutBtn] = useState(false);
+  const [activeUser, setActiveUser] = useState("");
+  const [shortName, setShortName] = useState("");
   const [activeTab, setActiveTab] = useState("dashboard");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+    showUserDetails();
+  }, []);
+
+  const showUserDetails = async () => {
+    const res = await getUser();
+    if (res.status === 200) {
+      const data = await res.json(res);
+      setActiveUser(data);
+      updateShortName(data.username);
+    } else {
+      const data = await res.json(res);
+      alert(data.message);
+    }
+  };
+
+  const updateShortName = (username) => {
+    const name = username.trim().split(" ");
+    const shortUsername =
+      name.length >= 2
+        ? name[0][0].toUpperCase() + name[1][0].toUpperCase()
+        : name[0]?.[0]?.toUpperCase();
+    setShortName(shortUsername);
+  };
 
   const handleLogout = () => {
     localStorage.clear("token");
@@ -80,7 +113,7 @@ const Dashboard = () => {
           <div className="hello-message">
             <img src={sun} alt="sun" />
             <div className="current-data">
-              <p>Good morning, Sujith</p>
+              <p>Good morning, {activeUser.username}</p>
               <p>Thu, Jan 25</p>
             </div>
           </div>
@@ -105,7 +138,7 @@ const Dashboard = () => {
                 className="profile-btn"
                 onClick={() => setShowLogoutBtn(!showLogoutBtn)}
               >
-                UG
+                {shortName}
               </button>
               {showLogoutBtn && (
                 <div className="dropdown-content">
@@ -121,7 +154,9 @@ const Dashboard = () => {
           {activeTab == "dashboard" && <Data />}
           {activeTab == "links" && <Links />}
           {activeTab == "analytics" && <Analytics />}
-          {activeTab == "settings" && <Settings />}
+          {activeTab == "settings" && (
+            <Settings activeUser={activeUser} setActiveUser={setActiveUser} updateShortName={updateShortName} />
+          )}
         </div>
       </div>
     </div>

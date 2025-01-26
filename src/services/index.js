@@ -19,3 +19,34 @@ export const login = (data) => {
         body: JSON.stringify(data),
     })
 }
+
+export const getUser = () => {
+    return fetch(`${URL}/user/`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : `${localStorage.getItem('token')}`
+        }
+    })
+}
+
+export const updateUser = (data) => {
+    return fetch(`${URL}/user/update`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : `${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(data),
+    })
+}
+
+export const deleteUser = () => {
+    return fetch(`${URL}/user/delete`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : `${localStorage.getItem('token')}`
+        }
+    })
+}
