@@ -40,3 +40,13 @@ export const updateUser = (data) => {
         body: JSON.stringify(data),
     })
 }
+
+export const deleteUser = () => {
+    return fetch(`${URL}/user/delete`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : `${localStorage.getItem('token')}`
+        }
+    })
+}

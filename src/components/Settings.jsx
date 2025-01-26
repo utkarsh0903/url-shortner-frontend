@@ -1,17 +1,25 @@
 import React, { useState } from "react";
 import "../styles/settings.css";
-import { updateUser } from "../services";
+import { deleteUser, updateUser } from "../services";
+import { useNavigate } from "react-router";
 
-const Settings = ({ activeUser, setActiveUser }) => {
+const Settings = ({ activeUser, setActiveUser, updateShortName }) => {
   const [userDetails, setUserDetails] = useState(activeUser);
   const [updatedFields, setUpdatedFields] = useState({});
 
+  const navigate = useNavigate();
+
   const handleSave = async () => {
+    let emailChanged = false;
+    let nameChanged = false;
+
     if (userDetails.username !== activeUser.username) {
       updatedFields.username = userDetails.username;
+      nameChanged = true;
     }
     if (userDetails.email !== activeUser.email) {
       updatedFields.email = userDetails.email;
+      emailChanged = true;
     }
     if (userDetails.mobile !== activeUser.mobile) {
       updatedFields.mobile = userDetails.mobile;
@@ -23,6 +31,12 @@ const Settings = ({ activeUser, setActiveUser }) => {
     }
     const res = await updateUser(updatedFields);
     if (res.status === 200) {
+      console.log(nameChanged);
+      if(nameChanged) updateShortName(updatedFields.username);
+      if (emailChanged) {
+        localStorage.clear("token");
+        navigate("/login");
+      }
       const data = await res.json(res);
       alert(data.message);
       setActiveUser(userDetails);
@@ -30,7 +44,21 @@ const Settings = ({ activeUser, setActiveUser }) => {
     } else {
       const data = await res.json(res);
       alert(data.message);
-      setUserDetails(activeUser)
+      setUserDetails(activeUser);
+    }
+  };
+
+  const handleDelete = async () => {
+    const res = await deleteUser();
+    if (res.status === 200) {
+      const data = await res.json(res);
+      alert(data.message);
+      localStorage.clear("token");
+      navigate("/login");
+    } else {
+      const data = await res.json(res);
+      alert(data.message);
+      setUserDetails(activeUser);
     }
   };
 
@@ -84,7 +112,9 @@ const Settings = ({ activeUser, setActiveUser }) => {
       <button className="save-btn" onClick={() => handleSave()}>
         Save Changes
       </button>
-      <button className="delete-btn" onClick={() => handleDelete()}>Delete Account</button>
+      <button className="delete-btn" onClick={() => handleDelete()}>
+        Delete Account
+      </button>
     </div>
   );
 };

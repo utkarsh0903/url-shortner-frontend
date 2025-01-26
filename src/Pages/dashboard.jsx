@@ -30,27 +30,30 @@ const Dashboard = () => {
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/login");
+      return;
     }
     showUserDetails();
-  }, [activeUser]);
+  }, []);
 
   const showUserDetails = async () => {
     const res = await getUser();
     if (res.status === 200) {
       const data = await res.json(res);
       setActiveUser(data);
-
-      const name = data.username.trim().split(" ");
-
-      const shortUsername =
-        name.length >= 2
-          ? name[0][0].toUpperCase() + name[1][0].toUpperCase()
-          : name[0]?.[0]?.toUpperCase();
-      setShortName(shortUsername);
+      updateShortName(data.username);
     } else {
       const data = await res.json(res);
       alert(data.message);
     }
+  };
+
+  const updateShortName = (username) => {
+    const name = username.trim().split(" ");
+    const shortUsername =
+      name.length >= 2
+        ? name[0][0].toUpperCase() + name[1][0].toUpperCase()
+        : name[0]?.[0]?.toUpperCase();
+    setShortName(shortUsername);
   };
 
   const handleLogout = () => {
@@ -152,7 +155,7 @@ const Dashboard = () => {
           {activeTab == "links" && <Links />}
           {activeTab == "analytics" && <Analytics />}
           {activeTab == "settings" && (
-            <Settings activeUser={activeUser} setActiveUser={setActiveUser} />
+            <Settings activeUser={activeUser} setActiveUser={setActiveUser} updateShortName={updateShortName} />
           )}
         </div>
       </div>
