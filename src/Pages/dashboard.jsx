@@ -23,6 +23,7 @@ import CreateLinkModal from "../components/CreateLinkModal";
 const Dashboard = () => {
   const [showLogoutBtn, setShowLogoutBtn] = useState(false);
   const [isCreateLinkModalOpen, setIsCreateLinkModalOpen] = useState(false);
+  const [newLinkAdded, setNewLinkAdded] = useState(false);
   const [activeUser, setActiveUser] = useState("");
   const [shortName, setShortName] = useState("");
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -152,7 +153,13 @@ const Dashboard = () => {
                 <img src={plus} alt="Plus" />
                 Create new
               </button>
-              {isCreateLinkModalOpen && <CreateLinkModal setIsCreateLinkModalOpen={setIsCreateLinkModalOpen} />}
+              {isCreateLinkModalOpen && (
+                <CreateLinkModal
+                  setIsCreateLinkModalOpen={setIsCreateLinkModalOpen}
+                  setNewLinkAdded={setNewLinkAdded}
+                  isCreateLinkModalOpen = {isCreateLinkModalOpen}
+                />
+              )}
             </div>
             <div className="search-input">
               <img src={searchIcon} alt="Search Icon" />
@@ -181,7 +188,7 @@ const Dashboard = () => {
         </div>
         <div className="hero-section">
           {activeTab == "dashboard" && <Data />}
-          {activeTab == "links" && <Links />}
+          {activeTab == "links" && <Links newLinkAdded={newLinkAdded} />}
           {activeTab == "analytics" && <Analytics />}
           {activeTab == "settings" && (
             <Settings

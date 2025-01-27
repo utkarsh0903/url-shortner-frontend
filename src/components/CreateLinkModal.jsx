@@ -1,27 +1,62 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/createLinkModal.css";
 import close from "../assets/close.png";
 import { createShortLink } from "../services";
 
-const CreateLinkModal = ({ setIsCreateLinkModalOpen }) => {
-  const [isSliderOn, setIsSliderOn] = useState(false);
+const CreateLinkModal = ({
+  setIsCreateLinkModalOpen,
+  setNewLinkAdded,
+  setIsEditModalOpen,
+  isEditModalOpen,
+  isCreateLinkModalOpen,
+  originalLink,
+  remarks,
+  expiryDate,
+}) => {
+  const [isSliderOn, setIsSliderOn] = useState(!!expiryDate);
   const [inputData, setInputData] = useState({
     originalURL: "",
     remarks: "",
     expiryDate: "",
   });
 
+  useEffect(() => {
+    if (isEditModalOpen) {
+      handleEdit();
+    }
+  }, []);
+
+  const handleEdit = () => {
+    if (expiryDate) {
+      const date = new Date(expiryDate);
+      const year = date.getFullYear();
+      console.log(year);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      console.log(month);
+      const day = String(date.getDate()).padStart(2, "0");
+      console.log(day);
+
+      expiryDate = `${year}-${month}-${day}`;
+    }
+    setInputData({
+      originalURL: originalLink,
+      remarks: remarks,
+      expiryDate: expiryDate || "",
+    });
+    setIsSliderOn(!!expiryDate);
+  };
+
   const handleSlider = () => {
     setIsSliderOn(!isSliderOn);
   };
 
   const handleCreate = async () => {
-    console.log(inputData);
     const res = await createShortLink(inputData);
     if (res.status === 200) {
       const data = await res.json(res);
       alert(data.message);
       setIsCreateLinkModalOpen(false);
+      setNewLinkAdded(true);
     } else {
       const data = await res.json(res);
       alert(data.message);
@@ -37,15 +72,21 @@ const CreateLinkModal = ({ setIsCreateLinkModalOpen }) => {
     });
   };
 
+  const handleSave = () => {};
+
   return (
     <div className="overlay">
       <div className="container">
         <div className="top-section">
-          <h2>New Link</h2>
+          <h2>{isCreateLinkModalOpen ? "New Link" : "Edit Link"}</h2>
           <img
             src={close}
             alt="Close"
-            onClick={() => setIsCreateLinkModalOpen(false)}
+            onClick={() =>
+              isCreateLinkModalOpen
+                ? setIsCreateLinkModalOpen(false)
+                : setIsEditModalOpen(false)
+            }
           />
         </div>
         <div className="add-new-section">
@@ -95,7 +136,7 @@ const CreateLinkModal = ({ setIsCreateLinkModalOpen }) => {
               <label htmlFor="active-slider" className="move-slider"></label>
             </div>
           </div>
-          <input
+          {isSliderOn && <input
             type="date"
             name="expiryDate"
             value={inputData.expiryDate}
@@ -105,14 +146,19 @@ const CreateLinkModal = ({ setIsCreateLinkModalOpen }) => {
                 [e.target.name]: e.target.value,
               })
             }
-          />
+          />}
         </div>
         <div className="bottom-section">
           <button className="clear-btn" onClick={() => handleClear()}>
             Clear
           </button>
-          <button className="create-link-btn" onClick={() => handleCreate()}>
-            Create new
+          <button
+            className="create-link-btn"
+            onClick={() =>
+              isCreateLinkModalOpen ? handleCreate() : handleSave()
+            }
+          >
+            {isCreateLinkModalOpen ? "Create new" : "Save"}
           </button>
         </div>
       </div>
