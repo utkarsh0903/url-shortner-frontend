@@ -136,7 +136,7 @@ const CreateLinkModal = ({
               <label htmlFor="active-slider" className="move-slider"></label>
             </div>
           </div>
-          <input
+          {isSliderOn && <input
             type="date"
             name="expiryDate"
             value={inputData.expiryDate}
@@ -146,7 +146,7 @@ const CreateLinkModal = ({
                 [e.target.name]: e.target.value,
               })
             }
-          />
+          />}
         </div>
         <div className="bottom-section">
           <button className="clear-btn" onClick={() => handleClear()}>
