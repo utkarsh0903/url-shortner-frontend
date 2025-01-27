@@ -4,11 +4,14 @@ import dropdown from "../assets/Dropdown.png";
 import copy from "../assets/copy-link.png";
 import edit from "../assets/edit-link.png";
 import deleteIcon from "../assets/delete-link.png";
+import CreateLinkModal from "./CreateLinkModal";
 
-const Links = () => {
+const Links = ({ newLinkAdded }) => {
   const [userLinks, setUserLinks] = useState([]);
   const [isdatesSorted, setIsDatesSorted] = useState(false);
   const [unsortedDates, setUnsortedDates] = useState([]);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [clickedLink, setClickedLink] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -17,7 +20,7 @@ const Links = () => {
       return;
     }
     showUserLinks();
-  }, []);
+  }, [newLinkAdded]);
 
   const showUserLinks = async () => {
     const res = await getUserLinks();
@@ -54,12 +57,21 @@ const Links = () => {
           (b, a) => new Date(a.createdAt) - new Date(b.createdAt)
         );
         setUserLinks(sortedDates);
-      }
-      else{
+      } else {
         setUserLinks(unsortedDates);
       }
       return currentState;
-    })
+    });
+  };
+
+  const handleCopy = (link) => {
+    navigator.clipboard.writeText(link);
+    alert("Link copied to clipboard!");
+  };
+
+  const handleEdit = (link) => {
+    setClickedLink(link);
+    setIsEditModalOpen(true);
   };
 
   return (
@@ -69,11 +81,7 @@ const Links = () => {
           <tr>
             <th>
               Date{" "}
-              <img
-                src={dropdown}
-                alt="Sort Date"
-                onClick={() => sortDate()}
-              />
+              <img src={dropdown} alt="Sort Date" onClick={() => sortDate()} />
             </th>
             <th>Original Link</th>
             <th>Short Link</th>
@@ -92,13 +100,35 @@ const Links = () => {
                 <td>{createdDate(link.createdAt)}</td>
                 <td>{link.originalLink}</td>
                 <td>
-                  {link.shortLink} <img src={copy} alt="Copy Icon" />
+                  {link.shortLink}{" "}
+                  <img
+                    src={copy}
+                    alt="Copy Icon"
+                    onClick={() => handleCopy(link.shortLink)}
+                  />
                 </td>
                 <td>{link.remarks}</td>
                 <td>0</td>
-                <td>{link.expiryDate}</td>
                 <td>
-                  <img src={edit} alt="Edit Icon" />{" "}
+                  {new Date(link.expiryDate) > new Date()
+                    ? "Active"
+                    : "Inactive"}
+                </td>
+                <td>
+                  <img
+                    src={edit}
+                    alt="Edit Icon"
+                    onClick={() => handleEdit(link)}
+                  />
+                  {isEditModalOpen && clickedLink && (
+                    <CreateLinkModal
+                      isEditModalOpen={isEditModalOpen}
+                      setIsEditModalOpen={setIsEditModalOpen}
+                      originalLink={clickedLink.originalLink}
+                      remarks={clickedLink.remarks}
+                      expiryDate={clickedLink.expiryDate}
+                    />
+                  )}
                   <img src={deleteIcon} alt="Delete Icon" />
                 </td>
               </tr>
