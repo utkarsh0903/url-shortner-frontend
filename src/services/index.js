@@ -72,3 +72,14 @@ export const getUserLinks = () => {
         }
     })
 }
+
+export const updateLink = (data) => {
+    return fetch(`${URL}/link/update-link`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : `${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(data),
+    })
+}

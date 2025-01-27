@@ -6,7 +6,7 @@ import edit from "../assets/edit-link.png";
 import deleteIcon from "../assets/delete-link.png";
 import CreateLinkModal from "./CreateLinkModal";
 
-const Links = ({ newLinkAdded }) => {
+const Links = ({ newLinkAdded, setNewLinkAdded }) => {
   const [userLinks, setUserLinks] = useState([]);
   const [isdatesSorted, setIsDatesSorted] = useState(false);
   const [unsortedDates, setUnsortedDates] = useState([]);
@@ -27,6 +27,7 @@ const Links = ({ newLinkAdded }) => {
     if (res.status === 200) {
       const data = await res.json(res);
       setUserLinks(data.userLinks);
+      setNewLinkAdded(false);
     } else {
       const data = await res.json(res);
       alert(data.message);
@@ -124,9 +125,11 @@ const Links = ({ newLinkAdded }) => {
                     <CreateLinkModal
                       isEditModalOpen={isEditModalOpen}
                       setIsEditModalOpen={setIsEditModalOpen}
-                      originalLink={clickedLink.originalLink}
+                      setNewLinkAdded={setNewLinkAdded}
+                      originalURL={clickedLink.originalLink}
                       remarks={clickedLink.remarks}
                       expiryDate={clickedLink.expiryDate}
+                      linkId = {clickedLink._id}
                     />
                   )}
                   <img src={deleteIcon} alt="Delete Icon" />
