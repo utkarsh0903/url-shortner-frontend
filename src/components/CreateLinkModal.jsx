@@ -13,7 +13,7 @@ const CreateLinkModal = ({
   remarks,
   expiryDate,
 }) => {
-  const [isSliderOn, setIsSliderOn] = useState(!!expiryDate);
+  const [isSliderOn, setIsSliderOn] = useState(false);
   const [inputData, setInputData] = useState({
     originalURL: "",
     remarks: "",
@@ -64,11 +64,11 @@ const CreateLinkModal = ({
   };
 
   const handleClear = () => {
-    setIsSliderOn(false);
+    isCreateLinkModalOpen && setIsSliderOn(false);
     setInputData({
       originalURL: "",
-      remarks: "",
-      expiryDate: "",
+      remarks: isCreateLinkModalOpen &&  "",
+      expiryDate: isCreateLinkModalOpen && "",
     });
   };
 
@@ -119,6 +119,7 @@ const CreateLinkModal = ({
                 [e.target.name]: String(e.target.value),
               })
             }
+            disabled={isEditModalOpen}
             required
           ></textarea>
           <div className="link-expiry-slider">
@@ -140,6 +141,7 @@ const CreateLinkModal = ({
             type="date"
             name="expiryDate"
             value={inputData.expiryDate}
+            disabled={isEditModalOpen}
             onChange={(e) =>
               setInputData({
                 ...inputData,
