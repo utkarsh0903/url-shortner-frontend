@@ -63,8 +63,8 @@ export const createShortLink = (data) => {
     })
 }
 
-export const getUserLinks = () => {
-    return fetch(`${URL}/link/`, {
+export const getUserLinks = ({limit, offset}) => {
+    return fetch(`${URL}/link/links?limit=${limit}&offset=${offset}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -81,5 +81,15 @@ export const updateLink = (data) => {
             'Authorization' : `${localStorage.getItem('token')}`
         },
         body: JSON.stringify(data),
+    })
+}
+
+export const deleteLink = (linkId) => {
+    return fetch(`${URL}/link/delete/${linkId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : `${localStorage.getItem('token')}`
+        }
     })
 }
