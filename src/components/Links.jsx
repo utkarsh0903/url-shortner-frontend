@@ -7,6 +7,8 @@ import deleteIcon from "../assets/delete-link.png";
 
 const Links = () => {
   const [userLinks, setUserLinks] = useState([]);
+  const [isdatesSorted, setIsDatesSorted] = useState(false);
+  const [unsortedDates, setUnsortedDates] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -29,18 +31,36 @@ const Links = () => {
   };
 
   const createdDate = (createdAt) => {
-    console.log(createdAt);
     const date = new Date(createdAt);
-    const dateFormat = date.toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false
-    }).replace(',', "")
+    const dateFormat = date
+      .toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      })
+      .replace(",", "");
     return dateFormat;
-  }
+  };
+
+  const sortDate = () => {
+    setIsDatesSorted((prevState) => {
+      const currentState = !prevState;
+      if (currentState) {
+        setUnsortedDates(userLinks);
+        const sortedDates = [...userLinks].sort(
+          (b, a) => new Date(a.createdAt) - new Date(b.createdAt)
+        );
+        setUserLinks(sortedDates);
+      }
+      else{
+        setUserLinks(unsortedDates);
+      }
+      return currentState;
+    })
+  };
 
   return (
     <div className="link-container">
@@ -48,7 +68,12 @@ const Links = () => {
         <thead>
           <tr>
             <th>
-              Date <img src={dropdown} alt="Sort Date" />
+              Date{" "}
+              <img
+                src={dropdown}
+                alt="Sort Date"
+                onClick={() => sortDate()}
+              />
             </th>
             <th>Original Link</th>
             <th>Short Link</th>
@@ -66,11 +91,16 @@ const Links = () => {
               <tr key={link._id}>
                 <td>{createdDate(link.createdAt)}</td>
                 <td>{link.originalLink}</td>
-                <td>{link.shortLink} <img src={copy} alt="Copy Icon" /></td>
+                <td>
+                  {link.shortLink} <img src={copy} alt="Copy Icon" />
+                </td>
                 <td>{link.remarks}</td>
-                <td>{link.clicks}</td>
+                <td>0</td>
                 <td>{link.expiryDate}</td>
-                <td><img src={edit} alt="Edit Icon" /> <img src={deleteIcon} alt="Delete Icon" /></td>
+                <td>
+                  <img src={edit} alt="Edit Icon" />{" "}
+                  <img src={deleteIcon} alt="Delete Icon" />
+                </td>
               </tr>
             );
           })}
