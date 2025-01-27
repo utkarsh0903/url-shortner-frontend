@@ -111,9 +111,9 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
                 <td>{link.remarks}</td>
                 <td>0</td>
                 <td>
-                  {new Date(link.expiryDate) > new Date()
+                  {link.expiryDate ? new Date(link.expiryDate) > new Date()
                     ? "Active"
-                    : "Inactive"}
+                    : "Inactive" : "Active"}
                 </td>
                 <td>
                   <img
