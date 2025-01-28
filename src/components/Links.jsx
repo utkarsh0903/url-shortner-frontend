@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { getUserLinks } from "../services";
+import { deleteLink, getUserLinks } from "../services";
 import dropdown from "../assets/Dropdown.png";
 import copy from "../assets/copy-link.png";
 import edit from "../assets/edit-link.png";
 import deleteIcon from "../assets/delete-link.png";
 import CreateLinkModal from "./CreateLinkModal";
 
-const Links = ({ newLinkAdded }) => {
+const Links = ({ newLinkAdded, setNewLinkAdded }) => {
   const [userLinks, setUserLinks] = useState([]);
   const [isdatesSorted, setIsDatesSorted] = useState(false);
   const [unsortedDates, setUnsortedDates] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [clickedLink, setClickedLink] = useState(null);
+  const [limit, setLimit] = useState(10);
+  const [offset, setOffset] = useState(0);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -23,10 +26,11 @@ const Links = ({ newLinkAdded }) => {
   }, [newLinkAdded]);
 
   const showUserLinks = async () => {
-    const res = await getUserLinks();
+    const res = await getUserLinks({ limit, offset: offset * limit });
     if (res.status === 200) {
       const data = await res.json(res);
       setUserLinks(data.userLinks);
+      setNewLinkAdded(false);
     } else {
       const data = await res.json(res);
       alert(data.message);
@@ -74,6 +78,19 @@ const Links = ({ newLinkAdded }) => {
     setIsEditModalOpen(true);
   };
 
+  const handleDelete = async (link) => {
+    const res = await deleteLink(link._id);
+    if (res.status === 200) {
+      const data = await res.json(res);
+      alert(data.message);
+      setNewLinkAdded(true);
+    } else {
+      const data = await res.json(res);
+      alert(data.message);
+      setUserDetails(activeUser);
+    }
+  };
+
   return (
     <div className="link-container">
       <table>
@@ -110,9 +127,11 @@ const Links = ({ newLinkAdded }) => {
                 <td>{link.remarks}</td>
                 <td>0</td>
                 <td>
-                  {new Date(link.expiryDate) > new Date()
-                    ? "Active"
-                    : "Inactive"}
+                  {link.expiryDate
+                    ? new Date(link.expiryDate) > new Date()
+                      ? "Active"
+                      : "Inactive"
+                    : "Active"}
                 </td>
                 <td>
                   <img
@@ -124,18 +143,36 @@ const Links = ({ newLinkAdded }) => {
                     <CreateLinkModal
                       isEditModalOpen={isEditModalOpen}
                       setIsEditModalOpen={setIsEditModalOpen}
-                      originalLink={clickedLink.originalLink}
+                      setNewLinkAdded={setNewLinkAdded}
+                      originalURL={clickedLink.originalLink}
                       remarks={clickedLink.remarks}
                       expiryDate={clickedLink.expiryDate}
+                      linkId={clickedLink._id}
                     />
                   )}
-                  <img src={deleteIcon} alt="Delete Icon" />
+                  <img
+                    src={deleteIcon}
+                    alt="Delete Icon"
+                    onClick={() => handleDelete(link)}
+                  />
                 </td>
               </tr>
             );
           })}
         </tbody>
       </table>
+      {/* <button
+        disabled={offset === 0}
+        onClick={() => setOffset((prevOffset) => prevOffset - 1)}
+      >
+        Prev
+      </button>
+      <button
+        disabled={offset * limit + limit >= count}
+        onClick={() => setOffset((prevOffset) => prevOffset + 1)}
+      >
+        Next
+      </button> */}
     </div>
   );
 };

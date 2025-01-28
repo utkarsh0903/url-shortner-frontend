@@ -1,5 +1,5 @@
-const URL = 'http://localhost:7000/api'
-// const URL = 'https://url-shortner-eqti.onrender.com/api'
+// const URL = 'http://localhost:7000/api'
+const URL = 'https://url-shortner-eqti.onrender.com/api'
 
 export const register = (data) => {
     return fetch(`${URL}/user/register`, {
@@ -63,9 +63,30 @@ export const createShortLink = (data) => {
     })
 }
 
-export const getUserLinks = () => {
-    return fetch(`${URL}/link/`, {
+export const getUserLinks = ({limit, offset}) => {
+    return fetch(`${URL}/link/links?limit=${limit}&offset=${offset}`, {
         method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : `${localStorage.getItem('token')}`
+        }
+    })
+}
+
+export const updateLink = (data) => {
+    return fetch(`${URL}/link/update-link`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : `${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(data),
+    })
+}
+
+export const deleteLink = (linkId) => {
+    return fetch(`${URL}/link/delete/${linkId}`, {
+        method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
             'Authorization' : `${localStorage.getItem('token')}`

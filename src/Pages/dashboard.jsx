@@ -188,7 +188,7 @@ const Dashboard = () => {
         </div>
         <div className="hero-section">
           {activeTab == "dashboard" && <Data />}
-          {activeTab == "links" && <Links newLinkAdded={newLinkAdded} />}
+          {activeTab == "links" && <Links newLinkAdded={newLinkAdded} setNewLinkAdded={setNewLinkAdded} />}
           {activeTab == "analytics" && <Analytics />}
           {activeTab == "settings" && (
             <Settings

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../styles/createLinkModal.css";
 import close from "../assets/close.png";
-import { createShortLink } from "../services";
+import { createShortLink, updateLink } from "../services";
 
 const CreateLinkModal = ({
   setIsCreateLinkModalOpen,
@@ -9,16 +9,21 @@ const CreateLinkModal = ({
   setIsEditModalOpen,
   isEditModalOpen,
   isCreateLinkModalOpen,
-  originalLink,
+  originalURL,
   remarks,
   expiryDate,
+  linkId
 }) => {
-  const [isSliderOn, setIsSliderOn] = useState(!!expiryDate);
+  const [isSliderOn, setIsSliderOn] = useState(false);
   const [inputData, setInputData] = useState({
-    originalURL: "",
+    originalLink: "",
     remarks: "",
     expiryDate: "",
   });
+  const [changedURL, setChangedURL] = useState({
+    originalLink: "",
+    linkId: ""
+  })
 
   useEffect(() => {
     if (isEditModalOpen) {
@@ -30,19 +35,19 @@ const CreateLinkModal = ({
     if (expiryDate) {
       const date = new Date(expiryDate);
       const year = date.getFullYear();
-      console.log(year);
       const month = String(date.getMonth() + 1).padStart(2, "0");
-      console.log(month);
       const day = String(date.getDate()).padStart(2, "0");
-      console.log(day);
 
       expiryDate = `${year}-${month}-${day}`;
     }
     setInputData({
-      originalURL: originalLink,
+      originalLink: originalURL,
       remarks: remarks,
       expiryDate: expiryDate || "",
     });
+    setChangedURL({
+        originalLink: originalURL
+    })
     setIsSliderOn(!!expiryDate);
   };
 
@@ -64,15 +69,26 @@ const CreateLinkModal = ({
   };
 
   const handleClear = () => {
-    setIsSliderOn(false);
+    isCreateLinkModalOpen && setIsSliderOn(false);
     setInputData({
-      originalURL: "",
-      remarks: "",
-      expiryDate: "",
+      originalLink: "",
+      remarks: isCreateLinkModalOpen &&  "",
+      expiryDate: isCreateLinkModalOpen && "",
     });
   };
 
-  const handleSave = () => {};
+  const handleSave = async () => {
+    const res = await updateLink(changedURL);
+    if (res.status === 200) {
+      const data = await res.json(res);
+      alert(data.message);
+      setIsEditModalOpen(false);
+      setNewLinkAdded(true);
+    } else {
+      const data = await res.json(res);
+      alert(data.message);
+    }
+  };
 
   return (
     <div className="overlay">
@@ -96,12 +112,16 @@ const CreateLinkModal = ({
           <input
             type="text"
             placeholder="https://web.whatsapp.com/"
-            name="originalURL"
-            value={inputData.originalURL}
+            name="originalLink"
+            value={isCreateLinkModalOpen ? inputData.originalLink : changedURL.originalLink}
             onChange={(e) =>
-              setInputData({
+              isCreateLinkModalOpen ? setInputData({
                 ...inputData,
                 [e.target.name]: String(e.target.value),
+              }) : 
+              setChangedURL({
+                originalLink: e.target.value,
+                linkId: linkId
               })
             }
             required
@@ -119,6 +139,7 @@ const CreateLinkModal = ({
                 [e.target.name]: String(e.target.value),
               })
             }
+            disabled={isEditModalOpen}
             required
           ></textarea>
           <div className="link-expiry-slider">
@@ -140,6 +161,7 @@ const CreateLinkModal = ({
             type="date"
             name="expiryDate"
             value={inputData.expiryDate}
+            disabled={isEditModalOpen}
             onChange={(e) =>
               setInputData({
                 ...inputData,
