@@ -5,7 +5,6 @@ import copy from "../assets/copy-link.png";
 import edit from "../assets/edit-link.png";
 import deleteIcon from "../assets/delete-link.png";
 import CreateLinkModal from "./CreateLinkModal";
-import { render } from "react-dom";
 
 const Links = ({ newLinkAdded, setNewLinkAdded }) => {
   const [userLinks, setUserLinks] = useState([]);
@@ -150,7 +149,7 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
           </tr>
         </thead>
         <tbody>
-          {userLinks.map((link) => {
+          {userLinks?.map((link) => {
             return (
               <tr key={link._id}>
                 <td>{createdDate(link.createdAt)}</td>
@@ -164,7 +163,7 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
                   />
                 </td>
                 <td>{link.remarks}</td>
-                <td>0</td>
+                <td>{link.clicks}</td>
                 <td>
                   {link.expiryDate
                     ? new Date(link.expiryDate) > new Date()
