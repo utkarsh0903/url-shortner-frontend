@@ -10,6 +10,7 @@ import { render } from "react-dom";
 const Links = ({ newLinkAdded, setNewLinkAdded }) => {
   const [userLinks, setUserLinks] = useState([]);
   const [isdatesSorted, setIsDatesSorted] = useState(false);
+  const [isStatusSorted, setIsStatusSorted] = useState(false);
   const [unsortedDates, setUnsortedDates] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [clickedLink, setClickedLink] = useState(null);
@@ -111,6 +112,24 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
     ));
   };
 
+  const handleStatusSort = () => {
+    setIsStatusSorted((prevState) => {
+      const currentState = !prevState;
+      if (currentState) {
+        setUnsortedDates(userLinks);
+        const sortedStatusLinks = [...userLinks].sort((a, b) => {
+          const isActiveA = !a.expiryDate || new Date(a.expiryDate) > new Date();
+          const isActiveB = !b.expiryDate || new Date(b.expiryDate) > new Date();
+          return isActiveB - isActiveA;
+        });
+        setUserLinks(sortedStatusLinks);
+      } else {
+        setUserLinks(unsortedDates);
+      }
+      return currentState;
+    });
+  }
+
   return (
     <div className="link-container">
       <table>
@@ -125,7 +144,7 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
             <th>Remarks</th>
             <th>Clicks</th>
             <th>
-              Status <img src={dropdown} alt="Sort status" />
+              Status <img src={dropdown} alt="Sort status" onClick={() => handleStatusSort()} />
             </th>
             <th>Action</th>
           </tr>
