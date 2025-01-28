@@ -60,13 +60,30 @@ const Analytics = () => {
     ));
   };
 
+  const sortDate = () => {
+    setIsDatesSorted((prevState) => {
+      const currentState = !prevState;
+      if (currentState) {
+        setUnsortedDates(userLinks);
+        const sortedDates = [...userLinks].sort(
+          (b, a) => new Date(a.createdAt) - new Date(b.createdAt)
+        );
+        setUserLinks(sortedDates);
+      } else {
+        setUserLinks(unsortedDates);
+      }
+      return currentState;
+    });
+  };
+
   return (
     <div>
       <table>
         <thead>
           <tr>
             <th>
-              Timestamp <img src={dropdown} alt="Sort Date" />
+              Timestamp{" "}
+              <img src={dropdown} alt="Sort Date" onClick={() => sortDate()} />
             </th>
             <th>Original Link</th>
             <th>Short Link</th>
