@@ -103,7 +103,6 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
     return pages.map((page) => (
       <button
         key={page}
-        // className={`page-number ${offset === page - 1 ? "active" : ""}`}
         onClick={() => setOffset(page - 1)}
       >
         {page}
@@ -199,19 +198,19 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
           })}
         </tbody>
       </table>
-      <button
+      {count > 10 && <button
         disabled={offset === 0}
         onClick={() => setOffset((prevOffset) => prevOffset - 1)}
       >
         Prev
-      </button>
+      </button>}
       {showPageNumbers()}
-      <button
+      { count > 10 && <button
         disabled={offset * limit + limit >= count}
         onClick={() => setOffset((prevOffset) => prevOffset + 1)}
       >
         Next
-      </button>
+      </button>}
     </div>
   );
 };

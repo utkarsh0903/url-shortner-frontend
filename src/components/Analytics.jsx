@@ -23,13 +23,41 @@ const Analytics = () => {
     const res = await getLinkAnalytics({ limit, offset: offset * limit });
     if (res.status === 200) {
       const data = await res.json(res);
-      console.log(data);
       setUserLinks(data.analyticsData);
       setCount(data.totalLinks);
     } else {
       const data = await res.json(res);
       alert(data.message);
     }
+  };
+
+  const createdDate = (createdAt) => {
+    const date = new Date(createdAt);
+    const dateFormat = date
+      .toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      })
+      .replace(",", "");
+    return dateFormat;
+  };
+
+  const showPageNumbers = () => {
+    const totalPages = Math.ceil(count / limit);
+    const pages = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(i);
+    }
+
+    return pages.map((page) => (
+      <button key={page} onClick={() => setOffset(page - 1)}>
+        {page}
+      </button>
+    ));
   };
 
   return (
@@ -50,7 +78,7 @@ const Analytics = () => {
           {userLinks?.map((link) => {
             return (
               <tr key={link._id}>
-                <td>{link.createdAt}</td>
+                <td>{createdDate(link.createdAt)}</td>
                 <td>{link.linkId.originalLink}</td>
                 <td>{link.linkId.shortLink}</td>
                 <td>{link.ipAddress}</td>
@@ -59,6 +87,23 @@ const Analytics = () => {
             );
           })}
         </tbody>
+        {count > 10 && (
+          <button
+            disabled={offset === 0}
+            onClick={() => setOffset((prevOffset) => prevOffset - 1)}
+          >
+            Prev
+          </button>
+        )}
+        {showPageNumbers()}
+        {count > 10 && (
+          <button
+            disabled={offset * limit + limit >= count}
+            onClick={() => setOffset((prevOffset) => prevOffset + 1)}
+          >
+            Next
+          </button>
+        )}
       </table>
     </div>
   );
