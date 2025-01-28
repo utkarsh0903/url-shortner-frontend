@@ -5,6 +5,7 @@ import copy from "../assets/copy-link.png";
 import edit from "../assets/edit-link.png";
 import deleteIcon from "../assets/delete-link.png";
 import CreateLinkModal from "./CreateLinkModal";
+import { render } from "react-dom";
 
 const Links = ({ newLinkAdded, setNewLinkAdded }) => {
   const [userLinks, setUserLinks] = useState([]);
@@ -23,13 +24,14 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
       return;
     }
     showUserLinks();
-  }, [newLinkAdded]);
+  }, [newLinkAdded, offset]);
 
   const showUserLinks = async () => {
     const res = await getUserLinks({ limit, offset: offset * limit });
     if (res.status === 200) {
       const data = await res.json(res);
       setUserLinks(data.userLinks);
+      setCount(data.totalLinks);
       setNewLinkAdded(false);
     } else {
       const data = await res.json(res);
@@ -89,6 +91,24 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
       alert(data.message);
       setUserDetails(activeUser);
     }
+  };
+
+  const showPageNumbers = () => {
+    const totalPages = Math.ceil(count/limit);
+    const pages = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(i);
+    }
+  
+    return pages.map((page) => (
+      <button
+        key={page}
+        // className={`page-number ${offset === page - 1 ? "active" : ""}`}
+        onClick={() => setOffset(page - 1)}
+      >
+        {page}
+      </button>
+    ));
   };
 
   return (
@@ -161,18 +181,19 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
           })}
         </tbody>
       </table>
-      {/* <button
+      <button
         disabled={offset === 0}
         onClick={() => setOffset((prevOffset) => prevOffset - 1)}
       >
         Prev
       </button>
+      {showPageNumbers()}
       <button
         disabled={offset * limit + limit >= count}
         onClick={() => setOffset((prevOffset) => prevOffset + 1)}
       >
         Next
-      </button> */}
+      </button>
     </div>
   );
 };
