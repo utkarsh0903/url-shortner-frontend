@@ -93,3 +93,13 @@ export const deleteLink = (linkId) => {
         }
     })
 }
+
+export const getLinkAnalytics = ({limit, offset}) => {
+    return fetch(`${URL}/analyse/analytics?limit=${limit}&offset=${offset}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : `${localStorage.getItem('token')}`
+        }
+    })
+}

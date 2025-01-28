@@ -9,6 +9,7 @@ import CreateLinkModal from "./CreateLinkModal";
 const Links = ({ newLinkAdded, setNewLinkAdded }) => {
   const [userLinks, setUserLinks] = useState([]);
   const [isdatesSorted, setIsDatesSorted] = useState(false);
+  const [isStatusSorted, setIsStatusSorted] = useState(false);
   const [unsortedDates, setUnsortedDates] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [clickedLink, setClickedLink] = useState(null);
@@ -23,13 +24,14 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
       return;
     }
     showUserLinks();
-  }, [newLinkAdded]);
+  }, [newLinkAdded, offset]);
 
   const showUserLinks = async () => {
     const res = await getUserLinks({ limit, offset: offset * limit });
     if (res.status === 200) {
       const data = await res.json(res);
       setUserLinks(data.userLinks);
+      setCount(data.totalLinks);
       setNewLinkAdded(false);
     } else {
       const data = await res.json(res);
@@ -91,6 +93,41 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
     }
   };
 
+  const showPageNumbers = () => {
+    const totalPages = Math.ceil(count/limit);
+    const pages = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(i);
+    }
+  
+    return pages.map((page) => (
+      <button
+        key={page}
+        onClick={() => setOffset(page - 1)}
+      >
+        {page}
+      </button>
+    ));
+  };
+
+  const handleStatusSort = () => {
+    setIsStatusSorted((prevState) => {
+      const currentState = !prevState;
+      if (currentState) {
+        setUnsortedDates(userLinks);
+        const sortedStatusLinks = [...userLinks].sort((a, b) => {
+          const isActiveA = !a.expiryDate || new Date(a.expiryDate) > new Date();
+          const isActiveB = !b.expiryDate || new Date(b.expiryDate) > new Date();
+          return isActiveB - isActiveA;
+        });
+        setUserLinks(sortedStatusLinks);
+      } else {
+        setUserLinks(unsortedDates);
+      }
+      return currentState;
+    });
+  }
+
   return (
     <div className="link-container">
       <table>
@@ -105,13 +142,13 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
             <th>Remarks</th>
             <th>Clicks</th>
             <th>
-              Status <img src={dropdown} alt="Sort status" />
+              Status <img src={dropdown} alt="Sort status" onClick={() => handleStatusSort()} />
             </th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {userLinks.map((link) => {
+          {userLinks?.map((link) => {
             return (
               <tr key={link._id}>
                 <td>{createdDate(link.createdAt)}</td>
@@ -125,7 +162,7 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
                   />
                 </td>
                 <td>{link.remarks}</td>
-                <td>0</td>
+                <td>{link.clicks}</td>
                 <td>
                   {link.expiryDate
                     ? new Date(link.expiryDate) > new Date()
@@ -161,18 +198,19 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
           })}
         </tbody>
       </table>
-      {/* <button
+      {count > 10 && <button
         disabled={offset === 0}
         onClick={() => setOffset((prevOffset) => prevOffset - 1)}
       >
         Prev
-      </button>
-      <button
+      </button>}
+      {showPageNumbers()}
+      { count > 10 && <button
         disabled={offset * limit + limit >= count}
         onClick={() => setOffset((prevOffset) => prevOffset + 1)}
       >
         Next
-      </button> */}
+      </button>}
     </div>
   );
 };
