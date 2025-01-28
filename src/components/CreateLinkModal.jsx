@@ -75,6 +75,9 @@ const CreateLinkModal = ({
       remarks: isCreateLinkModalOpen &&  "",
       expiryDate: isCreateLinkModalOpen && "",
     });
+    setChangedURL({
+        originalLink: ""
+    })
   };
 
   const handleSave = async () => {

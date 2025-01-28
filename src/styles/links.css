@@ -1,0 +1,169 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope&display=swap");
+
+.link-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+table {
+  margin-top: 2em;
+  margin-bottom: 1em;
+  display: inline-block;
+  width: 90%;
+  border-radius: 8px;
+  box-shadow: 0px 4px 4px 0px #0000000a;
+  thead {
+    display: block;
+    background-color: #f3f7fd;
+    border-radius: 8px 8px 0 0;
+    height: 2.7em;
+    padding-top: 0.5em;
+    tr {
+      th {
+        font-family: "Manrope", serif;
+        font-size: 1em;
+        line-height: 21.86px;
+        color: #3b3c51;
+      }
+      .link-date {
+        padding-left: 2.7em;
+        padding-right: 3em;
+        width: 10em;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        img {
+          cursor: pointer;
+        }
+      }
+      .link-original {
+        width: 16em;
+      }
+      .link-shortlink {
+        width: 16em;
+      }
+      .link-remarks {
+        width: 12em;
+      }
+      .link-clicks {
+        width: 6em;
+      }
+      .link-status {
+        padding-left: 1em;
+        padding-right: 1.4em;
+        width: 7em;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: center;
+        img {
+          cursor: pointer;
+        }
+      }
+      .link-actions {
+        width: 10em;
+      }
+    }
+  }
+  tbody {
+    display: inline;
+    border-radius: 0 0 8px 8px;
+    tr {
+      width: 100%;
+      td {
+        font-family: "Manrope", serif;
+        font-size: 1em;
+        line-height: 21.86px;
+        color: #3b3c51;
+      }
+      .link-data-date {
+        display: inline-block;
+        padding: 0.4em 0.3em 0.4em 0.2em;
+        width: 10em;
+        img {
+          cursor: pointer;
+        }
+      }
+      .link-data-original {
+        padding: 0.4em 0.3em 0.4em 0.2em;
+        display: inline-block;
+        width: 10em;
+        padding-left: 0.4em;
+        padding-right: 0.4em;
+        overflow-x: hidden;
+      }
+      .link-data-shortlink {
+        padding: 0.4em 0.4em 0.4em 0.4em;
+        display: inline-block;
+        width: 10em;
+        padding-left: 0.4em;
+        padding-right: 0.4em;
+        overflow: hidden;
+        img {
+          cursor: pointer;
+        }
+      }
+      .link-data-remarks {
+        padding: 0.4em 0.3em 0.4em 1em;
+        display: inline-block;
+        width: 8em;
+        text-align: left;
+      }
+      .link-data-clicks {
+        padding: 0.4em 0.3em 0.4em 0.2em;
+        display: inline-block;
+        width: 5em;
+        text-align: center;
+      }
+      .link-data-status {
+        padding: 0.4em 0.3em 0.4em 0.2em;
+        display: inline-block;
+        width: 7em;
+        text-align: center;
+      }
+      .link-data-actions {
+        padding: 0.4em 0.3em 0.4em 0.2em;
+        margin-left: 1.2em;
+        display: inline;
+        width: 10em;
+        text-align: center;
+        img {
+          width: 1.2em;
+          height: 1.2em;
+          cursor: pointer;
+          margin-right: 0.5em;
+        }
+      }
+    }
+  }
+}
+
+.active {
+  color: #1eb036;
+}
+
+.inactive {
+  color: #b0901e;
+}
+
+.link-paging {
+    margin-bottom: 2em;
+  button{
+    background-color: #FFFFFF;
+    border: 0.66px solid #DFE3E8;
+    width: 3em;
+    height: 2em;
+    margin-left: 1em;
+    cursor: pointer;
+    &:focus{
+        outline: #4200FF;
+    }
+  }
+}
+
+.disabled {
+    cursor: not-allowed !important;
+  background-color: #919eab;
+}

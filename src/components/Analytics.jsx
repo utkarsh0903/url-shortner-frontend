@@ -104,23 +104,21 @@ const Analytics = () => {
             );
           })}
         </tbody>
-        {count > 10 && (
-          <button
-            disabled={offset === 0}
-            onClick={() => setOffset((prevOffset) => prevOffset - 1)}
-          >
-            Prev
-          </button>
-        )}
+        {count > 10 && <div className="link-paging">
+        <button
+          disabled={offset === 0}
+          onClick={() => setOffset((prevOffset) => prevOffset - 1)}
+        >
+          Prev
+        </button>
         {showPageNumbers()}
-        {count > 10 && (
-          <button
-            disabled={offset * limit + limit >= count}
-            onClick={() => setOffset((prevOffset) => prevOffset + 1)}
-          >
-            Next
-          </button>
-        )}
+        <button
+          disabled={offset * limit + limit >= count}
+          onClick={() => setOffset((prevOffset) => prevOffset + 1)}
+        >
+          Next
+        </button>
+      </div>}
       </table>
     </div>
   );
