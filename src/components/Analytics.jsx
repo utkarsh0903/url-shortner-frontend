@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import dropdown from "../assets/Dropdown.png";
 import { getLinkAnalytics } from "../services";
+import "../styles/analytics.css";
 
 const Analytics = () => {
   const [userLinks, setUserLinks] = useState([]);
@@ -77,48 +78,58 @@ const Analytics = () => {
   };
 
   return (
-    <div>
+    <div className="analytic-container">
       <table>
         <thead>
           <tr>
-            <th>
+            <th className="analytic-date">
               Timestamp{" "}
               <img src={dropdown} alt="Sort Date" onClick={() => sortDate()} />
             </th>
-            <th>Original Link</th>
-            <th>Short Link</th>
-            <th>ip address</th>
-            <th>User Device</th>
+            <th className="analytic-original">Original Link</th>
+            <th className="analytic-shortlink">Short Link</th>
+            <th className="analytic-ipaddress">ip address</th>
+            <th className="analytic-device">User Device</th>
           </tr>
         </thead>
         <tbody>
           {userLinks?.map((link) => {
             return (
               <tr key={link._id}>
-                <td>{createdDate(link.createdAt)}</td>
-                <td>{link.linkId.originalLink}</td>
-                <td>{link.linkId.shortLink}</td>
-                <td>{link.ipAddress}</td>
-                <td>{link.device}</td>
+                <td className="analytic-data-date">
+                  {createdDate(link.createdAt)}
+                </td>
+                <td className="analytic-data-original">
+                  {link.linkId.originalLink}
+                </td>
+                <td className="analytic-data-shortlink">
+                  {link.linkId.shortLink}
+                </td>
+                <td className="analytic-data-ipaddress">{link.ipAddress}</td>
+                <td className="analytic-data-device">{link.device}</td>
               </tr>
             );
           })}
         </tbody>
-        {count > 10 && <div className="link-paging">
-        <button
-          disabled={offset === 0}
-          onClick={() => setOffset((prevOffset) => prevOffset - 1)}
-        >
-          Prev
-        </button>
-        {showPageNumbers()}
-        <button
-          disabled={offset * limit + limit >= count}
-          onClick={() => setOffset((prevOffset) => prevOffset + 1)}
-        >
-          Next
-        </button>
-      </div>}
+        {count > 10 && (
+          <div className="link-paging">
+            <button
+              className={offset === 0 ? "disabled" : ""}
+              disabled={offset === 0}
+              onClick={() => setOffset((prevOffset) => prevOffset - 1)}
+            >
+              &lt;
+            </button>
+            {showPageNumbers()}
+            <button
+              className={offset * limit + limit >= count ? "disabled" : ""}
+              disabled={offset * limit + limit >= count}
+              onClick={() => setOffset((prevOffset) => prevOffset + 1)}
+            >
+              &gt;
+            </button>
+          </div>
+        )}
       </table>
     </div>
   );
