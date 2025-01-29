@@ -81,7 +81,7 @@ const Dashboard = () => {
 
   const handleLogout = () => {
     localStorage.clear("token");
-    navigate("/");
+    navigate("/login");
   };
 
   return (

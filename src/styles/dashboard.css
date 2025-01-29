@@ -214,7 +214,7 @@
     }
   }
   .hero-section {
-    height: 87vh;
+    min-height: 87vh;
     border-top: 2px solid #f6f6f9;
     border-left: 2px solid #f6f6f9;
   }

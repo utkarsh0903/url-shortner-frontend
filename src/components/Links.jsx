@@ -5,6 +5,7 @@ import copy from "../assets/copy-link.png";
 import edit from "../assets/edit-link.png";
 import deleteIcon from "../assets/delete-link.png";
 import CreateLinkModal from "./CreateLinkModal";
+import "../styles/links.css";
 
 const Links = ({ newLinkAdded, setNewLinkAdded }) => {
   const [userLinks, setUserLinks] = useState([]);
@@ -94,17 +95,14 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
   };
 
   const showPageNumbers = () => {
-    const totalPages = Math.ceil(count/limit);
+    const totalPages = Math.ceil(count / limit);
     const pages = [];
     for (let i = 1; i <= totalPages; i++) {
       pages.push(i);
     }
-  
+
     return pages.map((page) => (
-      <button
-        key={page}
-        onClick={() => setOffset(page - 1)}
-      >
+      <button key={page} onClick={() => setOffset(page - 1)}>
         {page}
       </button>
     ));
@@ -116,8 +114,10 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
       if (currentState) {
         setUnsortedDates(userLinks);
         const sortedStatusLinks = [...userLinks].sort((a, b) => {
-          const isActiveA = !a.expiryDate || new Date(a.expiryDate) > new Date();
-          const isActiveB = !b.expiryDate || new Date(b.expiryDate) > new Date();
+          const isActiveA =
+            !a.expiryDate || new Date(a.expiryDate) > new Date();
+          const isActiveB =
+            !b.expiryDate || new Date(b.expiryDate) > new Date();
           return isActiveB - isActiveA;
         });
         setUserLinks(sortedStatusLinks);
@@ -126,34 +126,41 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
       }
       return currentState;
     });
-  }
+  };
 
   return (
     <div className="link-container">
-      <table>
+      <table className="link-table">
         <thead>
           <tr>
-            <th>
+            <th className="link-date">
               Date{" "}
               <img src={dropdown} alt="Sort Date" onClick={() => sortDate()} />
             </th>
-            <th>Original Link</th>
-            <th>Short Link</th>
-            <th>Remarks</th>
-            <th>Clicks</th>
-            <th>
-              Status <img src={dropdown} alt="Sort status" onClick={() => handleStatusSort()} />
+            <th className="link-original">Original Link</th>
+            <th className="link-shortlink">Short Link</th>
+            <th className="link-remarks">Remarks</th>
+            <th className="link-clicks">Clicks</th>
+            <th className="link-status">
+              Status{" "}
+              <img
+                src={dropdown}
+                alt="Sort status"
+                onClick={() => handleStatusSort()}
+              />
             </th>
-            <th>Action</th>
+            <th className="link-actions">Action</th>
           </tr>
         </thead>
         <tbody>
           {userLinks?.map((link) => {
             return (
               <tr key={link._id}>
-                <td>{createdDate(link.createdAt)}</td>
-                <td>{link.originalLink}</td>
-                <td>
+                <td className="link-data-date">
+                  {createdDate(link.createdAt)}
+                </td>
+                <td className="link-data-original">{link.originalLink}</td>
+                <td className="link-data-shortlink">
                   {link.shortLink}{" "}
                   <img
                     src={copy}
@@ -161,16 +168,24 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
                     onClick={() => handleCopy(link.shortLink)}
                   />
                 </td>
-                <td>{link.remarks}</td>
-                <td>{link.clicks}</td>
-                <td>
+                <td className="link-data-remarks">{link.remarks}</td>
+                <td className="link-data-clicks">{link.clicks}</td>
+                <td
+                  className={`link-data-status ${
+                    link.expiryDate
+                    ? new Date(link.expiryDate) > new Date()
+                      ? "active"
+                      : "inactive"
+                    : "active"
+                  }`}
+                >
                   {link.expiryDate
                     ? new Date(link.expiryDate) > new Date()
                       ? "Active"
                       : "Inactive"
                     : "Active"}
                 </td>
-                <td>
+                <td className="link-data-actions">
                   <img
                     src={edit}
                     alt="Edit Icon"
@@ -198,19 +213,25 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
           })}
         </tbody>
       </table>
-      {count > 10 && <button
-        disabled={offset === 0}
-        onClick={() => setOffset((prevOffset) => prevOffset - 1)}
-      >
-        Prev
-      </button>}
-      {showPageNumbers()}
-      { count > 10 && <button
-        disabled={offset * limit + limit >= count}
-        onClick={() => setOffset((prevOffset) => prevOffset + 1)}
-      >
-        Next
-      </button>}
+      {count > 10 && (
+        <div className="link-paging">
+          <button
+          className={offset === 0 ? "disabled" : ""}
+            disabled={offset === 0}
+            onClick={() => setOffset((prevOffset) => prevOffset - 1)}
+          >
+            &lt;
+          </button>
+          {showPageNumbers()}
+          <button
+          className={offset * limit + limit >= count ? "disabled" : ""}
+            disabled={offset * limit + limit >= count}
+            onClick={() => setOffset((prevOffset) => prevOffset + 1)}
+          >
+            &gt;
+          </button>
+        </div>
+      )}
     </div>
   );
 };
