@@ -93,7 +93,7 @@ const Analytics = () => {
           </tr>
         </thead>
         <tbody>
-          {userLinks?.map((link) => {
+          {userLinks.length == 0 ? <p className="no-data">No data found</p> :userLinks?.map((link) => {
             return (
               <tr key={link._id}>
                 <td className="analytic-data-date">

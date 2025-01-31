@@ -157,7 +157,8 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
           </tr>
         </thead>
         <tbody>
-          {userLinks?.map((link) => {
+          {console.log(userLinks)}
+          {userLinks.length == 0 ? <p className="no-data">No data found</p> : userLinks?.map((link) => {
             return (
               <tr key={link._id}>
                 <td className="link-data-date">

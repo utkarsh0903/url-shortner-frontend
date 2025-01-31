@@ -120,3 +120,11 @@ table {
     cursor: not-allowed !important;
   background-color: #919eab;
 }
+
+.no-data{
+  min-height: 3em;
+  margin-top: 1em;
+  margin-left: 2em;
+  font-size: 1em;
+  font-family: "Manrope", serif;
+}
