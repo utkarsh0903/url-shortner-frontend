@@ -1,0 +1,66 @@
+.data-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.total-clicks {
+  margin: 3em 4em;
+  p {
+    color: #181820;
+    font-family: "Manrope", serif;
+    font-size: 1.3em;
+    font-weight: 700;
+    line-height: 27.32px;
+
+    span {
+      color: #1b48da;
+      margin-left: 1em;
+    }
+  }
+}
+
+.click-details {
+  margin: 0 4em;
+  display: flex;
+  flex-wrap: wrap;
+  width: 88%;
+  .date-wise-clicks {
+    margin-right: 3em;
+    margin-bottom: 2em;
+    width: 45%;
+    min-height: 21em;
+    border: 1px solid #ECECF2;
+    border-radius: 6px;
+    box-shadow: 0px 1px 2px 0px #1018280D;
+    p {
+        margin: 1em 2em;
+      font-family: "Manrope", serif;
+      font-size: 0.99em;
+      line-height: 19.12px;
+        color: #1B48DA;
+    }
+    .datewise-chart{
+        margin: 0em 2em;
+    }
+  }
+  .click-devices {
+    margin-right: 1em;
+    margin-bottom: 2em;
+    width: 45%;
+    min-height: 21em;
+    border: 1px solid #ECECF2;
+    border-radius: 6px;
+    box-shadow: 0px 1px 2px 0px #1018280D;
+    p {
+        margin: 1em 2em;
+      font-family: "Manrope", serif;
+      font-size: 0.99em;
+      line-height: 19.12px;
+        color: #1B48DA;
+    }
+    .device-chart{
+        margin: 0em 2em;
+    }
+  }
+}

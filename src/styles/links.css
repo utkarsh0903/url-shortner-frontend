@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Manrope&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap');
 
 .link-container {
   display: flex;
@@ -154,13 +155,32 @@ table {
     height: 2em;
     margin-left: 1em;
     cursor: pointer;
-    &:focus{
-        outline: #4200FF;
-    }
   }
 }
 
 .disabled {
     cursor: not-allowed !important;
-  background-color: #919eab;
+  background-color: #919eab !important;
+}
+
+.page-number{
+  border-radius: 5px;
+  font-family: "Inter", serif;
+font-size: 1em;
+font-weight: 700;
+line-height: 13.13px;
+
+}
+
+.page-active{
+  border: 0.66px solid #4200FF !important;
+  color: #4200FF;
+  font-family: SF Pro Text;
+font-size: 1em;
+line-height: 13.13px;
+}
+
+.page-inactive{
+  color: #212B36;
+  ;
 }

@@ -102,7 +102,11 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
     }
 
     return pages.map((page) => (
-      <button key={page} onClick={() => setOffset(page - 1)}>
+      <button
+        key={page}
+        className={`page-number ${offset === page - 1 ? "page-active" : "page-inactive"}`}
+        onClick={() => setOffset(page - 1)}
+      >
         {page}
       </button>
     ));
@@ -173,10 +177,10 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
                 <td
                   className={`link-data-status ${
                     link.expiryDate
-                    ? new Date(link.expiryDate) > new Date()
-                      ? "active"
-                      : "inactive"
-                    : "active"
+                      ? new Date(link.expiryDate) > new Date()
+                        ? "active"
+                        : "inactive"
+                      : "active"
                   }`}
                 >
                   {link.expiryDate
@@ -216,7 +220,7 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
       {count > 10 && (
         <div className="link-paging">
           <button
-          className={offset === 0 ? "disabled" : ""}
+            className={offset === 0 ? "disabled" : ""}
             disabled={offset === 0}
             onClick={() => setOffset((prevOffset) => prevOffset - 1)}
           >
@@ -224,7 +228,7 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
           </button>
           {showPageNumbers()}
           <button
-          className={offset * limit + limit >= count ? "disabled" : ""}
+            className={offset * limit + limit >= count ? "disabled" : ""}
             disabled={offset * limit + limit >= count}
             onClick={() => setOffset((prevOffset) => prevOffset + 1)}
           >
