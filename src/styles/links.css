@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Manrope&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap");
 
 .link-container {
   display: flex;
@@ -147,10 +147,10 @@ table {
 }
 
 .link-paging {
-    margin-bottom: 2em;
-  button{
-    background-color: #FFFFFF;
-    border: 0.66px solid #DFE3E8;
+  margin-bottom: 2em;
+  button {
+    background-color: #ffffff;
+    border: 0.66px solid #dfe3e8;
     width: 3em;
     height: 2em;
     margin-left: 1em;
@@ -159,36 +159,34 @@ table {
 }
 
 .disabled {
-    cursor: not-allowed !important;
+  cursor: not-allowed !important;
   background-color: #919eab !important;
 }
 
-.page-number{
+.page-number {
   border-radius: 5px;
   font-family: "Inter", serif;
-font-size: 1em;
-font-weight: 700;
-line-height: 13.13px;
-
-}
-
-.page-active{
-  border: 0.66px solid #4200FF !important;
-  color: #4200FF;
-  font-family:"Manrope", serif;
-font-size: 1em;
-line-height: 13.13px;
-}
-
-.page-inactive{
-  color: #212B36;
-  ;
-}
-
-.no-data{
-  min-height: 3em;
-  margin-top: 1em;
-  margin-left: 2em;
   font-size: 1em;
+  font-weight: 700;
+  line-height: 13.13px;
+}
+
+.page-active {
+  border: 0.66px solid #4200ff !important;
+  color: #4200ff;
+  font-family: "Manrope", serif;
+  font-size: 1em;
+  line-height: 13.13px;
+}
+
+.page-inactive {
+  color: #212b36;
+}
+
+.no-data {
+  display: inline-block;
+  height: 3em;
+  margin-top: 1em;
+  font-size: 1.2em;
   font-family: "Manrope", serif;
 }
