@@ -190,3 +190,14 @@ table {
   font-size: 1.2em;
   font-family: "Manrope", serif;
 }
+
+.status-filter-dropdown{
+  position: relative;
+  .status-dropdown{
+    position: absolute;
+    top: 1em; 
+    &:focus{
+      outline: none;
+    }
+  }
+}

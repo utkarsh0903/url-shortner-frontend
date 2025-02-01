@@ -10,9 +10,10 @@ import DeleteModal from "./DeleteModal";
 
 const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
   const [userLinks, setUserLinks] = useState([]);
-  const [isdatesSorted, setIsDatesSorted] = useState(false);
-  const [isStatusSorted, setIsStatusSorted] = useState(false);
-  const [unsortedDates, setUnsortedDates] = useState([]);
+  const [isDatesSorted, setIsDatesSorted] = useState(false);
+  const [showStatusOptions, setShowStatusOptions] = useState(false);
+  const [isStatus, setIsStatus] = useState("all");
+  // const [unsortedDates, setUnsortedDates] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [linkDeleteModalOpen, setLinkDeleteModalOpen] = useState(false);
   const [clickedLink, setClickedLink] = useState(null);
@@ -27,13 +28,15 @@ const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
       return;
     }
     showUserLinks();
-  }, [newLinkAdded, offset, search]);
+  }, [newLinkAdded, offset, search, isDatesSorted, isStatus]);
 
   const showUserLinks = async () => {
     const res = await getUserLinks({
       limit,
       offset: offset * limit,
       remarks: search,
+      isDatesSorted,
+      isStatus,
     });
     if (res.status === 200) {
       const data = await res.json(res);
@@ -62,19 +65,7 @@ const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
   };
 
   const sortDate = () => {
-    setIsDatesSorted((prevState) => {
-      const currentState = !prevState;
-      if (currentState) {
-        setUnsortedDates(userLinks);
-        const sortedDates = [...userLinks].sort(
-          (b, a) => new Date(a.createdAt) - new Date(b.createdAt)
-        );
-        setUserLinks(sortedDates);
-      } else {
-        setUserLinks(unsortedDates);
-      }
-      return currentState;
-    });
+    setIsDatesSorted((prev) => !prev);
   };
 
   const handleCopy = (link) => {
@@ -107,22 +98,6 @@ const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
     setLinkDeleteModalOpen(false);
   };
 
-  // const handleDelete = async (link) => {
-  //   setLinkDeleteModalOpen(true);
-  //   if (isDelete) {
-  //     console.log("Delete")
-  //     const res = await deleteLink(link._id);
-  //     if (res.status === 200) {
-  //       const data = await res.json(res);
-  //       alert(data.message);
-  //       setNewLinkAdded(true);
-  //     } else {
-  //       const data = await res.json(res);
-  //       alert(data.message);
-  //     }
-  //   }
-  // };
-
   const showPageNumbers = () => {
     const totalPages = Math.ceil(count / limit);
     const pages = [];
@@ -144,24 +119,13 @@ const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
   };
 
   const handleStatusSort = () => {
-    setIsStatusSorted((prevState) => {
-      const currentState = !prevState;
-      if (currentState) {
-        setUnsortedDates(userLinks);
-        const sortedStatusLinks = [...userLinks].sort((a, b) => {
-          const isActiveA =
-            !a.expiryDate || new Date(a.expiryDate) > new Date();
-          const isActiveB =
-            !b.expiryDate || new Date(b.expiryDate) > new Date();
-          return isActiveB - isActiveA;
-        });
-        setUserLinks(sortedStatusLinks);
-      } else {
-        setUserLinks(unsortedDates);
-      }
-      return currentState;
-    });
+    setShowStatusOptions((prev) => !prev);
   };
+
+  const handleSelectStatus = (e) => {
+    setIsStatus(e.target.value);
+    setShowStatusOptions(false);
+  }
 
   return (
     <div className="link-container">
@@ -177,12 +141,26 @@ const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
             <th className="link-remarks">Remarks</th>
             <th className="link-clicks">Clicks</th>
             <th className="link-status">
-              Status{" "}
+            
+              Status{" "}{showStatusOptions && (
+                <div className="status-filter-dropdown">
+                  <select
+                    value={isStatus}
+                    onChange={(e) => handleSelectStatus(e)}
+                    className="status-dropdown"
+                  >
+                    <option value="all">All</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                  </select>
+                </div>
+              )}
               <img
                 src={dropdown}
                 alt="Sort status"
                 onClick={() => handleStatusSort()}
               />
+              
             </th>
             <th className="link-actions">Action</th>
           </tr>
@@ -250,6 +228,7 @@ const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
                     {linkDeleteModalOpen && (
                       <DeleteModal
                         setLinkDeleteModalOpen={setLinkDeleteModalOpen}
+                        linkDeleteModalOpen={linkDeleteModalOpen}
                         finalDelete={finalDelete}
                       />
                     )}
