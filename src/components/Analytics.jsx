@@ -7,7 +7,6 @@ const Analytics = () => {
   const [userLinks, setUserLinks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDatesSorted, setIsDatesSorted] = useState(false);
-  const [unsortedDates, setUnsortedDates] = useState([]);
   const [limit, setLimit] = useState(10);
   const [offset, setOffset] = useState(0);
   const [count, setCount] = useState(0);
