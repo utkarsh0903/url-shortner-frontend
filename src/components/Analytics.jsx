@@ -93,44 +93,50 @@ const Analytics = () => {
           </tr>
         </thead>
         <tbody>
-          {userLinks?.map((link) => {
-            return (
-              <tr key={link._id}>
-                <td className="analytic-data-date">
-                  {createdDate(link.createdAt)}
-                </td>
-                <td className="analytic-data-original">
-                  {link.linkId.originalLink}
-                </td>
-                <td className="analytic-data-shortlink">
-                  {link.linkId.shortLink}
-                </td>
-                <td className="analytic-data-ipaddress">{link.ipAddress}</td>
-                <td className="analytic-data-device">{link.device}</td>
-              </tr>
-            );
-          })}
+          {userLinks.length == 0 ? (
+            <tr className="no-data">
+              <td>No data found</td>
+            </tr>
+          ) : (
+            userLinks?.map((link) => {
+              return (
+                <tr key={link._id}>
+                  <td className="analytic-data-date">
+                    {createdDate(link.createdAt)}
+                  </td>
+                  <td className="analytic-data-original">
+                    {link.linkId.originalLink}
+                  </td>
+                  <td className="analytic-data-shortlink">
+                    {link.linkId.shortLink}
+                  </td>
+                  <td className="analytic-data-ipaddress">{link.ipAddress}</td>
+                  <td className="analytic-data-device">{link.device}</td>
+                </tr>
+              );
+            })
+          )}
         </tbody>
-        {count > 10 && (
-          <div className="link-paging">
-            <button
-              className={offset === 0 ? "disabled" : ""}
-              disabled={offset === 0}
-              onClick={() => setOffset((prevOffset) => prevOffset - 1)}
-            >
-              &lt;
-            </button>
-            {showPageNumbers()}
-            <button
-              className={offset * limit + limit >= count ? "disabled" : ""}
-              disabled={offset * limit + limit >= count}
-              onClick={() => setOffset((prevOffset) => prevOffset + 1)}
-            >
-              &gt;
-            </button>
-          </div>
-        )}
       </table>
+      {count > 10 && (
+        <div className="link-paging">
+          <button
+            className={offset === 0 ? "disabled" : ""}
+            disabled={offset === 0}
+            onClick={() => setOffset((prevOffset) => prevOffset - 1)}
+          >
+            &lt;
+          </button>
+          {showPageNumbers()}
+          <button
+            className={offset * limit + limit >= count ? "disabled" : ""}
+            disabled={offset * limit + limit >= count}
+            onClick={() => setOffset((prevOffset) => prevOffset + 1)}
+          >
+            &gt;
+          </button>
+        </div>
+      )}
     </div>
   );
 };

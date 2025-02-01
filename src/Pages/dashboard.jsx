@@ -29,6 +29,7 @@ const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [currentDate, setCurrentDate] = useState("");
   const [helloMessage, setHelloMessage] = useState("");
+  const [search, setSearch] = useState('')
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -83,6 +84,11 @@ const Dashboard = () => {
     localStorage.clear("token");
     navigate("/login");
   };
+
+  const handleSearch = (e) => {
+    setActiveTab("links");
+    setSearch(e.target.value);
+  }
 
   return (
     <div className="dashboard-container">
@@ -166,7 +172,9 @@ const Dashboard = () => {
               <input
                 type="text"
                 name="search"
-                placeholder="Search by links"
+                onChange={(e) => handleSearch(e)}
+                value={search}
+                placeholder="Search by remarks"
               ></input>
             </div>
             <div className="name-initials">
@@ -188,7 +196,7 @@ const Dashboard = () => {
         </div>
         <div className="hero-section">
           {activeTab == "dashboard" && <Data />}
-          {activeTab == "links" && <Links newLinkAdded={newLinkAdded} setNewLinkAdded={setNewLinkAdded} />}
+          {activeTab == "links" && <Links newLinkAdded={newLinkAdded} setNewLinkAdded={setNewLinkAdded} search={search}/>}
           {activeTab == "analytics" && <Analytics />}
           {activeTab == "settings" && (
             <Settings
