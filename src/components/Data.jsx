@@ -8,7 +8,6 @@ import {
   XAxis,
   YAxis,
   ResponsiveContainer,
-  Text,
 } from "recharts";
 
 const Data = () => {
@@ -78,7 +77,7 @@ const Data = () => {
           <p>Date-wise Clicks</p>
 
           <ResponsiveContainer className="datewise-chart" width="90%" height={120}>
-            <BarChart data={datewiseData} layout="vertical">
+            <BarChart data={datewiseData} layout="vertical" margin={{ right: 30 }}>
               <XAxis
                 type="number"
                 axisLine={false}
@@ -88,7 +87,7 @@ const Data = () => {
               <YAxis
                 dataKey="date"
                 type="category"
-                width={60}
+                width={66}
                 axisLine={false}
                 tickLine={false}
               />
@@ -96,6 +95,8 @@ const Data = () => {
                 dataKey="clicks"
                 fill="blue"
                 barSize={20}
+                width={"80%"}
+                margin={{ right: 15 }}
                 label={{ position: "right", fill: "#3B3C51" }}
               ></Bar>
             </BarChart>
@@ -104,7 +105,7 @@ const Data = () => {
         <div className="click-devices">
           <p>Click Devices</p>
           <ResponsiveContainer className="device-chart" width="90%" height={120}>
-            <BarChart data={deviceData} layout="vertical"margin={{ right: 30 }}>
+            <BarChart data={deviceData} layout="vertical" margin={{ right: 30 }}>
               <XAxis
                 type="number"
                 axisLine={false}

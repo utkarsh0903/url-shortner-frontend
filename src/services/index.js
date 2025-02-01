@@ -63,8 +63,8 @@ export const createShortLink = (data) => {
   });
 };
 
-export const getUserLinks = ({ limit, offset }) => {
-  return fetch(`${URL}/link/links?limit=${limit}&offset=${offset}`, {
+export const getUserLinks = ({ limit, offset, remarks }) => {
+  return fetch(`${URL}/link/links?limit=${limit}&offset=${offset}&remarks=${remarks}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

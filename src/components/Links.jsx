@@ -7,7 +7,7 @@ import deleteIcon from "../assets/delete-link.png";
 import CreateLinkModal from "./CreateLinkModal";
 import "../styles/links.css";
 
-const Links = ({ newLinkAdded, setNewLinkAdded }) => {
+const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
   const [userLinks, setUserLinks] = useState([]);
   const [isdatesSorted, setIsDatesSorted] = useState(false);
   const [isStatusSorted, setIsStatusSorted] = useState(false);
@@ -25,10 +25,14 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
       return;
     }
     showUserLinks();
-  }, [newLinkAdded, offset]);
+  }, [newLinkAdded, offset, search]);
 
   const showUserLinks = async () => {
-    const res = await getUserLinks({ limit, offset: offset * limit });
+    const res = await getUserLinks({
+      limit,
+      offset: offset * limit,
+      remarks: search,
+    });
     if (res.status === 200) {
       const data = await res.json(res);
       setUserLinks(data.userLinks);
@@ -104,7 +108,9 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
     return pages.map((page) => (
       <button
         key={page}
-        className={`page-number ${offset === page - 1 ? "page-active" : "page-inactive"}`}
+        className={`page-number ${
+          offset === page - 1 ? "page-active" : "page-inactive"
+        }`}
         onClick={() => setOffset(page - 1)}
       >
         {page}
@@ -157,65 +163,70 @@ const Links = ({ newLinkAdded, setNewLinkAdded }) => {
           </tr>
         </thead>
         <tbody>
-          {console.log(userLinks)}
-          {userLinks.length == 0 ? <p className="no-data">No data found</p> : userLinks?.map((link) => {
-            return (
-              <tr key={link._id}>
-                <td className="link-data-date">
-                  {createdDate(link.createdAt)}
-                </td>
-                <td className="link-data-original">{link.originalLink}</td>
-                <td className="link-data-shortlink">
-                  {link.shortLink}{" "}
-                  <img
-                    src={copy}
-                    alt="Copy Icon"
-                    onClick={() => handleCopy(link.shortLink)}
-                  />
-                </td>
-                <td className="link-data-remarks">{link.remarks}</td>
-                <td className="link-data-clicks">{link.clicks}</td>
-                <td
-                  className={`link-data-status ${
-                    link.expiryDate
-                      ? new Date(link.expiryDate) > new Date()
-                        ? "active"
-                        : "inactive"
-                      : "active"
-                  }`}
-                >
-                  {link.expiryDate
-                    ? new Date(link.expiryDate) > new Date()
-                      ? "Active"
-                      : "Inactive"
-                    : "Active"}
-                </td>
-                <td className="link-data-actions">
-                  <img
-                    src={edit}
-                    alt="Edit Icon"
-                    onClick={() => handleEdit(link)}
-                  />
-                  {isEditModalOpen && clickedLink && (
-                    <CreateLinkModal
-                      isEditModalOpen={isEditModalOpen}
-                      setIsEditModalOpen={setIsEditModalOpen}
-                      setNewLinkAdded={setNewLinkAdded}
-                      originalURL={clickedLink.originalLink}
-                      remarks={clickedLink.remarks}
-                      expiryDate={clickedLink.expiryDate}
-                      linkId={clickedLink._id}
+          {userLinks.length == 0 ? (
+            <tr className="no-data">
+              <td>No data found</td>
+            </tr>
+          ) : (
+            userLinks?.map((link) => {
+              return (
+                <tr key={link._id}>
+                  <td className="link-data-date">
+                    {createdDate(link.createdAt)}
+                  </td>
+                  <td className="link-data-original">{link.originalLink}</td>
+                  <td className="link-data-shortlink">
+                    {link.shortLink}{" "}
+                    <img
+                      src={copy}
+                      alt="Copy Icon"
+                      onClick={() => handleCopy(link.shortLink)}
                     />
-                  )}
-                  <img
-                    src={deleteIcon}
-                    alt="Delete Icon"
-                    onClick={() => handleDelete(link)}
-                  />
-                </td>
-              </tr>
-            );
-          })}
+                  </td>
+                  <td className="link-data-remarks">{link.remarks}</td>
+                  <td className="link-data-clicks">{link.clicks}</td>
+                  <td
+                    className={`link-data-status ${
+                      link.expiryDate
+                        ? new Date(link.expiryDate) > new Date()
+                          ? "active"
+                          : "inactive"
+                        : "active"
+                    }`}
+                  >
+                    {link.expiryDate
+                      ? new Date(link.expiryDate) > new Date()
+                        ? "Active"
+                        : "Inactive"
+                      : "Active"}
+                  </td>
+                  <td className="link-data-actions">
+                    <img
+                      src={edit}
+                      alt="Edit Icon"
+                      onClick={() => handleEdit(link)}
+                    />
+                    {isEditModalOpen && clickedLink && (
+                      <CreateLinkModal
+                        isEditModalOpen={isEditModalOpen}
+                        setIsEditModalOpen={setIsEditModalOpen}
+                        setNewLinkAdded={setNewLinkAdded}
+                        originalURL={clickedLink.originalLink}
+                        remarks={clickedLink.remarks}
+                        expiryDate={clickedLink.expiryDate}
+                        linkId={clickedLink._id}
+                      />
+                    )}
+                    <img
+                      src={deleteIcon}
+                      alt="Delete Icon"
+                      onClick={() => handleDelete(link)}
+                    />
+                  </td>
+                </tr>
+              );
+            })
+          )}
         </tbody>
       </table>
       {count > 10 && (
