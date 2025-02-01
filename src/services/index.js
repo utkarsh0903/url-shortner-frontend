@@ -63,14 +63,23 @@ export const createShortLink = (data) => {
   });
 };
 
-export const getUserLinks = ({ limit, offset, remarks, isDatesSorted }) => {
-  return fetch(`${URL}/link/links?limit=${limit}&offset=${offset}&remarks=${remarks}&isDatesSorted=${isDatesSorted}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `${localStorage.getItem("token")}`,
-    },
-  });
+export const getUserLinks = ({
+  limit,
+  offset,
+  remarks,
+  isDatesSorted,
+  isStatus,
+}) => {
+  return fetch(
+    `${URL}/link/links?limit=${limit}&offset=${offset}&remarks=${remarks}&isDatesSorted=${isDatesSorted}&isStatus=${isStatus}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${localStorage.getItem("token")}`,
+      },
+    }
+  );
 };
 
 export const updateLink = (data) => {
