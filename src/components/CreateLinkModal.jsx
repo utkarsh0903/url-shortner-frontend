@@ -12,7 +12,7 @@ const CreateLinkModal = ({
   originalURL,
   remarks,
   expiryDate,
-  linkId
+  linkId,
 }) => {
   const [isSliderOn, setIsSliderOn] = useState(false);
   const [inputData, setInputData] = useState({
@@ -22,37 +22,47 @@ const CreateLinkModal = ({
   });
   const [changedURL, setChangedURL] = useState({
     originalLink: "",
-    linkId: ""
-  })
+    remarks: "",
+    expiryDate: "",
+    linkId: "",
+  });
 
   useEffect(() => {
     if (isEditModalOpen) {
       handleEdit();
     }
-  }, []);
+  }, [isEditModalOpen]);
 
   const handleEdit = () => {
+    let expiryFormat = "";
     if (expiryDate) {
       const date = new Date(expiryDate);
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, "0");
       const day = String(date.getDate()).padStart(2, "0");
 
-      expiryDate = `${year}-${month}-${day}`;
+      expiryFormat = `${year}-${month}-${day}`;
     }
-    setInputData({
+    setChangedURL({
       originalLink: originalURL,
       remarks: remarks,
-      expiryDate: expiryDate || "",
+      expiryDate: expiryFormat || "",
+      linkId: linkId,
     });
-    setChangedURL({
-        originalLink: originalURL
-    })
-    setIsSliderOn(!!expiryDate);
+    setIsSliderOn(true);
   };
 
   const handleSlider = () => {
-    setIsSliderOn(!isSliderOn);
+    setIsSliderOn((prevState) => !prevState);
+    if (!isSliderOn) {
+      setChangedURL((prev) => ({ ...prev, expiryDate: "" }));
+    }
+    if (isSliderOn) {
+      setChangedURL((prev) => ({
+        ...prev,
+        expiryDate: "",
+      }));
+    }
   };
 
   const handleCreate = async () => {
@@ -69,15 +79,22 @@ const CreateLinkModal = ({
   };
 
   const handleClear = () => {
-    isCreateLinkModalOpen && setIsSliderOn(false);
-    setInputData({
-      originalLink: "",
-      remarks: isCreateLinkModalOpen &&  "",
-      expiryDate: isCreateLinkModalOpen && "",
-    });
-    setChangedURL({
-        originalLink: ""
-    })
+    setIsSliderOn(false);
+    console.log("clear", isSliderOn);
+    if (isCreateLinkModalOpen) {
+      setInputData({
+        originalLink: "",
+        remarks: "",
+        expiryDate: "",
+      });
+    } else {
+      setChangedURL({
+        originalLink: "",
+        remarks: "",
+        expiryDate: "",
+        linkId: linkId,
+      });
+    }
   };
 
   const handleSave = async () => {
@@ -116,16 +133,22 @@ const CreateLinkModal = ({
             type="text"
             placeholder="https://web.whatsapp.com/"
             name="originalLink"
-            value={isCreateLinkModalOpen ? inputData.originalLink : changedURL.originalLink}
+            value={
+              isCreateLinkModalOpen
+                ? inputData.originalLink
+                : changedURL.originalLink
+            }
             onChange={(e) =>
-              isCreateLinkModalOpen ? setInputData({
-                ...inputData,
-                [e.target.name]: String(e.target.value),
-              }) : 
-              setChangedURL({
-                originalLink: e.target.value,
-                linkId: linkId
-              })
+              isCreateLinkModalOpen
+                ? setInputData({
+                    ...inputData,
+                    originalLink: e.target.value,
+                  })
+                : setChangedURL({
+                    ...changedURL,
+                    originalLink: e.target.value,
+                    linkId: linkId,
+                  })
             }
             required
           />
@@ -135,14 +158,14 @@ const CreateLinkModal = ({
           <textarea
             placeholder="Add remarks"
             name="remarks"
-            value={inputData.remarks}
-            onChange={(e) =>
-              setInputData({
-                ...inputData,
-                [e.target.name]: String(e.target.value),
-              })
+            value={
+              isCreateLinkModalOpen ? inputData.remarks : changedURL.remarks
             }
-            disabled={isEditModalOpen}
+            onChange={(e) =>
+              isCreateLinkModalOpen
+                ? setInputData({ ...inputData, remarks: e.target.value })
+                : setChangedURL({ ...changedURL, remarks: e.target.value })
+            }
             required
           ></textarea>
           <div className="link-expiry-slider">
@@ -155,23 +178,27 @@ const CreateLinkModal = ({
                 id="active-slider"
                 className="change-slider"
                 checked={isSliderOn}
-                onChange={handleSlider}
+                onChange={() => handleSlider()}
               />
               <label htmlFor="active-slider" className="move-slider"></label>
             </div>
           </div>
-          {isSliderOn && <input
-            type="date"
-            name="expiryDate"
-            value={inputData.expiryDate}
-            disabled={isEditModalOpen}
-            onChange={(e) =>
-              setInputData({
-                ...inputData,
-                [e.target.name]: e.target.value,
-              })
-            }
-          />}
+          {isSliderOn && (
+            <input
+              type="date"
+              name="expiryDate"
+              value={
+                isCreateLinkModalOpen
+                  ? inputData.expiryDate
+                  : changedURL.expiryDate
+              }
+              onChange={(e) =>
+                isCreateLinkModalOpen
+                  ? setInputData({ ...inputData, expiryDate: e.target.value })
+                  : setChangedURL({ ...changedURL, expiryDate: e.target.value })
+              }
+            />
+          )}
         </div>
         <div className="bottom-section">
           <button className="clear-btn" onClick={() => handleClear()}>

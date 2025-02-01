@@ -2,13 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { getClicksData } from "../services";
 import "../styles/data.css";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  ResponsiveContainer,
-} from "recharts";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from "recharts";
 
 const Data = () => {
   const navigate = useNavigate();
@@ -43,17 +37,13 @@ const Data = () => {
   };
 
   const datewiseData = Object.entries(clickData.datewiseClicks)
-    .map(([date, clicks]) => ({ date: date, clicks: clicks }))
+    .map(([date, clicks]) => ({ date, clicks }))
     .sort((a, b) => new Date(a.date) - new Date(b.date))
     .reduce((acc, curr, index) => {
-      if (index === 0) {
-        acc.push(curr);
-      } else {
-        acc.push({
-          date: curr.date,
-          clicks: curr.clicks + acc[index - 1].clicks,
-        });
+      if (acc.length > 0) {
+        curr.clicks += acc[acc.length - 1].clicks;
       }
+      acc.push(curr);
       return acc;
     }, [])
     .reverse();
@@ -64,6 +54,24 @@ const Data = () => {
       clicks: clicks,
     })
   );
+
+  const CustomYAxisTick = (props) => {
+    const { x, y, payload } = props;
+    return (
+      <text 
+        x={x} 
+        y={y} 
+        dy={5} 
+        textAnchor="end"
+        style={{ fontSize: "1em" }}
+      >
+        {payload.value}
+      </text>
+    );
+  };
+
+  const barContainerHeight = Math.max(120, datewiseData.length * 40);
+
 
   return (
     <div className="data-container">
@@ -76,8 +84,16 @@ const Data = () => {
         <div className="date-wise-clicks">
           <p>Date-wise Clicks</p>
 
-          <ResponsiveContainer className="datewise-chart" width="90%" height={120}>
-            <BarChart data={datewiseData} layout="vertical" margin={{ right: 30 }}>
+          <ResponsiveContainer
+            className="datewise-chart"
+            width="90%"
+            height={barContainerHeight}
+          >
+            <BarChart
+              data={datewiseData}
+              layout="vertical"
+              margin={{ right: 30 }}
+            >
               <XAxis
                 type="number"
                 axisLine={false}
@@ -90,13 +106,13 @@ const Data = () => {
                 width={66}
                 axisLine={false}
                 tickLine={false}
+                tick={<CustomYAxisTick />}
               />
               <Bar
                 dataKey="clicks"
                 fill="blue"
                 barSize={20}
                 width={"80%"}
-                margin={{ right: 15 }}
                 label={{ position: "right", fill: "#3B3C51" }}
               ></Bar>
             </BarChart>
@@ -104,8 +120,16 @@ const Data = () => {
         </div>
         <div className="click-devices">
           <p>Click Devices</p>
-          <ResponsiveContainer className="device-chart" width="90%" height={120}>
-            <BarChart data={deviceData} layout="vertical" margin={{ right: 30 }}>
+          <ResponsiveContainer
+            className="device-chart"
+            width="90%"
+            height={120}
+          >
+            <BarChart
+              data={deviceData}
+              layout="vertical"
+              margin={{ right: 30 }}
+            >
               <XAxis
                 type="number"
                 axisLine={false}
