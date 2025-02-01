@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import "../styles/settings.css";
 import { deleteUser, updateUser } from "../services";
 import { useNavigate } from "react-router";
+import DeleteModal from "./DeleteModal";
 
 const Settings = ({ activeUser, setActiveUser, updateShortName }) => {
   const [userDetails, setUserDetails] = useState(activeUser);
+  const [userDeleteModalOpen, setUserDeleteModalOpen] = useState(false);
   const [updatedFields, setUpdatedFields] = useState({});
 
   const navigate = useNavigate();
@@ -111,9 +113,10 @@ const Settings = ({ activeUser, setActiveUser, updateShortName }) => {
       <button className="save-btn" onClick={() => handleSave()}>
         Save Changes
       </button>
-      <button className="delete-btn" onClick={() => handleDelete()}>
+      <button className="delete-btn" onClick={() => setUserDeleteModalOpen(true)}>
         Delete Account
       </button>
+      {userDeleteModalOpen && <DeleteModal setUserDeleteModalOpen={setUserDeleteModalOpen} handleDelete={handleDelete} />}
     </div>
   );
 };

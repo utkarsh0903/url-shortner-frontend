@@ -107,22 +107,6 @@ const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
     setLinkDeleteModalOpen(false);
   };
 
-  // const handleDelete = async (link) => {
-  //   setLinkDeleteModalOpen(true);
-  //   if (isDelete) {
-  //     console.log("Delete")
-  //     const res = await deleteLink(link._id);
-  //     if (res.status === 200) {
-  //       const data = await res.json(res);
-  //       alert(data.message);
-  //       setNewLinkAdded(true);
-  //     } else {
-  //       const data = await res.json(res);
-  //       alert(data.message);
-  //     }
-  //   }
-  // };
-
   const showPageNumbers = () => {
     const totalPages = Math.ceil(count / limit);
     const pages = [];
@@ -250,6 +234,7 @@ const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
                     {linkDeleteModalOpen && (
                       <DeleteModal
                         setLinkDeleteModalOpen={setLinkDeleteModalOpen}
+                        linkDeleteModalOpen={linkDeleteModalOpen}
                         finalDelete={finalDelete}
                       />
                     )}

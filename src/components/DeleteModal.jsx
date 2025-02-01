@@ -2,7 +2,13 @@ import React from "react";
 import "../styles/deleteModal.css";
 import close from "../assets/closeBlack.png";
 
-const DeleteModal = ({ setLinkDeleteModalOpen, finalDelete }) => {
+const DeleteModal = ({
+  setLinkDeleteModalOpen,
+  linkDeleteModalOpen,
+  finalDelete,
+  setUserDeleteModalOpen,
+  handleDelete
+}) => {
   return (
     <div className="delete-overlay">
       <div className="delete-container" id="delete-modal">
@@ -10,20 +16,24 @@ const DeleteModal = ({ setLinkDeleteModalOpen, finalDelete }) => {
           src={close}
           alt="close btn"
           className="close-btn"
-          onClick={() => setLinkDeleteModalOpen(false)}
+          onClick={() => linkDeleteModalOpen ? setLinkDeleteModalOpen(false) : setUserDeleteModalOpen(false)}
         />
-        <h2> Are you sure, you want to remove it ?</h2>
+        <h2>
+          {linkDeleteModalOpen
+            ? "Are you sure, you want to remove it ?"
+            : " Are you sure, you want to delete the account ? "}
+        </h2>
         <div className="modal-btns">
           <button
             className="cancel-btn"
-            onClick={() => setLinkDeleteModalOpen(false)}
+            onClick={() => linkDeleteModalOpen ? setLinkDeleteModalOpen(false) : setUserDeleteModalOpen(false)}
           >
             NO
           </button>
           <button
             className="done-btn"
             onClick={() => {
-              finalDelete();
+                linkDeleteModalOpen ? finalDelete() : handleDelete() ;
             }}
           >
             YES
