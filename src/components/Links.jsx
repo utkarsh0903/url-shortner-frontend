@@ -7,13 +7,14 @@ import deleteIcon from "../assets/delete-link.png";
 import CreateLinkModal from "./CreateLinkModal";
 import "../styles/links.css";
 import DeleteModal from "./DeleteModal";
+import toast, { Toaster } from "react-hot-toast";
+import blueTick from "../assets/blueTick.png";
 
 const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
   const [userLinks, setUserLinks] = useState([]);
   const [isDatesSorted, setIsDatesSorted] = useState(false);
   const [showStatusOptions, setShowStatusOptions] = useState(false);
   const [isStatus, setIsStatus] = useState("all");
-  // const [unsortedDates, setUnsortedDates] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [linkDeleteModalOpen, setLinkDeleteModalOpen] = useState(false);
   const [clickedLink, setClickedLink] = useState(null);
@@ -70,7 +71,27 @@ const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
 
   const handleCopy = (link) => {
     navigator.clipboard.writeText(link);
-    alert("Link copied to clipboard!");
+    toast(
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <img
+          src={blueTick}
+          alt="Blue Tick"
+          style={{ width: "1em", height: "1em", marginRight: "1em" }}
+        />
+        <span style={{ color: "#000000"}}>Link Copied!</span>
+      </div>,
+      {
+        duration: 4000,
+        position: "bottom-left",
+        style: {
+          padding: "0.5em",          
+          border: "1px solid #1B48DA",
+          borderRadius: "8px",
+          background: "#FFFFFF",
+          color: "#000000",
+        },
+      }
+    );
   };
 
   const handleEdit = (link) => {
@@ -125,7 +146,7 @@ const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
   const handleSelectStatus = (e) => {
     setIsStatus(e.target.value);
     setShowStatusOptions(false);
-  }
+  };
 
   return (
     <div className="link-container">
@@ -141,8 +162,8 @@ const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
             <th className="link-remarks">Remarks</th>
             <th className="link-clicks">Clicks</th>
             <th className="link-status">
-            
-              Status{" "}{showStatusOptions && (
+              Status{" "}
+              {showStatusOptions && (
                 <div className="status-filter-dropdown">
                   <select
                     value={isStatus}
@@ -160,7 +181,6 @@ const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
                 alt="Sort status"
                 onClick={() => handleStatusSort()}
               />
-              
             </th>
             <th className="link-actions">Action</th>
           </tr>
@@ -256,6 +276,7 @@ const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
           >
             &gt;
           </button>
+          <Toaster />
         </div>
       )}
     </div>
