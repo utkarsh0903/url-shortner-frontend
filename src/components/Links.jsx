@@ -288,9 +288,9 @@ const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
               >
                 &gt;
               </button>
-              <Toaster />
             </div>
           )}
+          <Toaster />
         </>
       )}
     </div>
