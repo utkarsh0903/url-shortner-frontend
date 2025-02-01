@@ -10,7 +10,7 @@ import DeleteModal from "./DeleteModal";
 
 const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
   const [userLinks, setUserLinks] = useState([]);
-  const [isdatesSorted, setIsDatesSorted] = useState(false);
+  const [isDatesSorted, setIsDatesSorted] = useState(false);
   const [isStatusSorted, setIsStatusSorted] = useState(false);
   const [unsortedDates, setUnsortedDates] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -27,13 +27,14 @@ const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
       return;
     }
     showUserLinks();
-  }, [newLinkAdded, offset, search]);
+  }, [newLinkAdded, offset, search, isDatesSorted]);
 
   const showUserLinks = async () => {
     const res = await getUserLinks({
       limit,
       offset: offset * limit,
       remarks: search,
+      isDatesSorted:isDatesSorted.toString()
     });
     if (res.status === 200) {
       const data = await res.json(res);
@@ -62,19 +63,7 @@ const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
   };
 
   const sortDate = () => {
-    setIsDatesSorted((prevState) => {
-      const currentState = !prevState;
-      if (currentState) {
-        setUnsortedDates(userLinks);
-        const sortedDates = [...userLinks].sort(
-          (b, a) => new Date(a.createdAt) - new Date(b.createdAt)
-        );
-        setUserLinks(sortedDates);
-      } else {
-        setUserLinks(unsortedDates);
-      }
-      return currentState;
-    });
+    setIsDatesSorted((prev) => !prev);
   };
 
   const handleCopy = (link) => {
