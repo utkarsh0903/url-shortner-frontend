@@ -11,6 +11,7 @@ const Data = () => {
     datewiseClicks: {},
     deviceClicks: {},
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -25,6 +26,7 @@ const Data = () => {
     const res = await getClicksData();
     if (res.status === 200) {
       const data = await res.json(res);
+      setIsLoading(false);
       setClickData({
         totalClicks: data.totalClicks,
         datewiseClicks: data.datewiseClicks,
@@ -75,7 +77,7 @@ const Data = () => {
 
   return (
     <div className="data-container">
-      <div className="total-clicks">
+      {isLoading ? <p className="loader">Loading...</p> : <><div className="total-clicks">
         <p>
           Total Clicks <span>{clickData.totalClicks}</span>
         </p>
@@ -155,7 +157,7 @@ const Data = () => {
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </div>
+      </div></>}
     </div>
   );
 };
