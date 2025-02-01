@@ -31,9 +31,10 @@ const CreateLinkModal = ({
     if (isEditModalOpen) {
       handleEdit();
     }
-  }, [isEditModalOpen]);
+  }, []);
 
   const handleEdit = () => {
+    setIsSliderOn(true);
     let expiryFormat = "";
     if (expiryDate) {
       const date = new Date(expiryDate);
@@ -46,23 +47,19 @@ const CreateLinkModal = ({
     setChangedURL({
       originalLink: originalURL,
       remarks: remarks,
-      expiryDate: expiryFormat || "",
+      expiryDate: expiryFormat,
       linkId: linkId,
     });
-    setIsSliderOn(true);
   };
 
   const handleSlider = () => {
-    setIsSliderOn((prevState) => !prevState);
-    if (!isSliderOn) {
-      setChangedURL((prev) => ({ ...prev, expiryDate: "" }));
+    console.log(isSliderOn);
+    if (isEditModalOpen) {
+      setIsSliderOn(false);
+    } else {
+      setIsSliderOn(!isSliderOn);
     }
-    if (isSliderOn) {
-      setChangedURL((prev) => ({
-        ...prev,
-        expiryDate: "",
-      }));
-    }
+    console.log(isSliderOn);
   };
 
   const handleCreate = async () => {
@@ -80,7 +77,6 @@ const CreateLinkModal = ({
 
   const handleClear = () => {
     setIsSliderOn(false);
-    console.log("clear", isSliderOn);
     if (isCreateLinkModalOpen) {
       setInputData({
         originalLink: "",

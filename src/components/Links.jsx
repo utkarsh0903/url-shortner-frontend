@@ -6,6 +6,7 @@ import edit from "../assets/edit-link.png";
 import deleteIcon from "../assets/delete-link.png";
 import CreateLinkModal from "./CreateLinkModal";
 import "../styles/links.css";
+import DeleteModal from "./DeleteModal";
 
 const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
   const [userLinks, setUserLinks] = useState([]);
@@ -13,6 +14,7 @@ const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
   const [isStatusSorted, setIsStatusSorted] = useState(false);
   const [unsortedDates, setUnsortedDates] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [linkDeleteModalOpen, setLinkDeleteModalOpen] = useState(false);
   const [clickedLink, setClickedLink] = useState(null);
   const [limit, setLimit] = useState(10);
   const [offset, setOffset] = useState(0);
@@ -85,18 +87,41 @@ const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
     setIsEditModalOpen(true);
   };
 
-  const handleDelete = async (link) => {
-    const res = await deleteLink(link._id);
-    if (res.status === 200) {
-      const data = await res.json(res);
-      alert(data.message);
-      setNewLinkAdded(true);
-    } else {
-      const data = await res.json(res);
-      alert(data.message);
-      setUserDetails(activeUser);
-    }
+  const handleDelete = (link) => {
+    setClickedLink(link);
+    setLinkDeleteModalOpen(true);
   };
+
+  const finalDelete = async () => {
+    if (clickedLink) {
+      const res = await deleteLink(clickedLink._id);
+      if (res.status === 200) {
+        const data = await res.json();
+        alert(data.message);
+        setNewLinkAdded(true);
+      } else {
+        const data = await res.json();
+        alert(data.message);
+      }
+    }
+    setLinkDeleteModalOpen(false);
+  };
+
+  // const handleDelete = async (link) => {
+  //   setLinkDeleteModalOpen(true);
+  //   if (isDelete) {
+  //     console.log("Delete")
+  //     const res = await deleteLink(link._id);
+  //     if (res.status === 200) {
+  //       const data = await res.json(res);
+  //       alert(data.message);
+  //       setNewLinkAdded(true);
+  //     } else {
+  //       const data = await res.json(res);
+  //       alert(data.message);
+  //     }
+  //   }
+  // };
 
   const showPageNumbers = () => {
     const totalPages = Math.ceil(count / limit);
@@ -222,6 +247,12 @@ const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
                       alt="Delete Icon"
                       onClick={() => handleDelete(link)}
                     />
+                    {linkDeleteModalOpen && (
+                      <DeleteModal
+                        setLinkDeleteModalOpen={setLinkDeleteModalOpen}
+                        finalDelete={finalDelete}
+                      />
+                    )}
                   </td>
                 </tr>
               );
