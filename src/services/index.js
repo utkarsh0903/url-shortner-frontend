@@ -103,8 +103,8 @@ export const deleteLink = (linkId) => {
   });
 };
 
-export const getLinkAnalytics = ({ limit, offset }) => {
-  return fetch(`${URL}/analyse/analytics?limit=${limit}&offset=${offset}`, {
+export const getLinkAnalytics = ({ limit, offset, isDatesSorted }) => {
+  return fetch(`${URL}/analyse/analytics?limit=${limit}&offset=${offset}&isDatesSorted=${isDatesSorted}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

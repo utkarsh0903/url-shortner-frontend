@@ -24,6 +24,7 @@ const Dashboard = () => {
   const [showLogoutBtn, setShowLogoutBtn] = useState(false);
   const [isCreateLinkModalOpen, setIsCreateLinkModalOpen] = useState(false);
   const [newLinkAdded, setNewLinkAdded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [activeUser, setActiveUser] = useState("");
   const [shortName, setShortName] = useState("");
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -63,6 +64,7 @@ const Dashboard = () => {
     const res = await getUser();
     if (res.status === 200) {
       const data = await res.json(res);
+      setIsLoading(false);
       setActiveUser(data);
       updateShortName(data.username);
     } else {
@@ -141,12 +143,12 @@ const Dashboard = () => {
         <div className="top-navbar">
           <div className="hello-message">
             <img src={sun} alt="sun" />
-            <div className="current-data">
+            {isLoading ? <p>Loading....</p> : <div className="current-data">
               <p>
                 {helloMessage}, {activeUser.username}
               </p>
               <p>{currentDate}</p>
-            </div>
+            </div>}
           </div>
 
           <div className="navbar-info">

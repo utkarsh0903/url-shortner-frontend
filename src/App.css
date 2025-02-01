@@ -3,3 +3,9 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+.loader{
+    margin: 2em;
+    font-size: 2em;
+
+}

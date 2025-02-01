@@ -12,6 +12,7 @@ import blueTick from "../assets/blueTick.png";
 
 const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
   const [userLinks, setUserLinks] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isDatesSorted, setIsDatesSorted] = useState(false);
   const [showStatusOptions, setShowStatusOptions] = useState(false);
   const [isStatus, setIsStatus] = useState("all");
@@ -41,6 +42,7 @@ const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
     });
     if (res.status === 200) {
       const data = await res.json(res);
+      setIsLoading(false);
       setUserLinks(data.userLinks);
       setCount(data.totalLinks);
       setNewLinkAdded(false);
@@ -78,13 +80,13 @@ const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
           alt="Blue Tick"
           style={{ width: "1em", height: "1em", marginRight: "1em" }}
         />
-        <span style={{ color: "#000000"}}>Link Copied!</span>
+        <span style={{ color: "#000000" }}>Link Copied!</span>
       </div>,
       {
         duration: 4000,
         position: "bottom-left",
         style: {
-          padding: "0.5em",          
+          padding: "0.5em",
           border: "1px solid #1B48DA",
           borderRadius: "8px",
           background: "#FFFFFF",
@@ -150,134 +152,146 @@ const Links = ({ newLinkAdded, setNewLinkAdded, search }) => {
 
   return (
     <div className="link-container">
-      <table className="link-table">
-        <thead>
-          <tr>
-            <th className="link-date">
-              Date{" "}
-              <img src={dropdown} alt="Sort Date" onClick={() => sortDate()} />
-            </th>
-            <th className="link-original">Original Link</th>
-            <th className="link-shortlink">Short Link</th>
-            <th className="link-remarks">Remarks</th>
-            <th className="link-clicks">Clicks</th>
-            <th className="link-status">
-              Status{" "}
-              {showStatusOptions && (
-                <div className="status-filter-dropdown">
-                  <select
-                    value={isStatus}
-                    onChange={(e) => handleSelectStatus(e)}
-                    className="status-dropdown"
-                  >
-                    <option value="all">All</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                  </select>
-                </div>
-              )}
-              <img
-                src={dropdown}
-                alt="Sort status"
-                onClick={() => handleStatusSort()}
-              />
-            </th>
-            <th className="link-actions">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {userLinks.length == 0 ? (
-            <tr className="no-data">
-              <td>No data found</td>
-            </tr>
-          ) : (
-            userLinks?.map((link) => {
-              return (
-                <tr key={link._id}>
-                  <td className="link-data-date">
-                    {createdDate(link.createdAt)}
-                  </td>
-                  <td className="link-data-original">{link.originalLink}</td>
-                  <td className="link-data-shortlink">
-                    {link.shortLink}{" "}
-                    <img
-                      src={copy}
-                      alt="Copy Icon"
-                      onClick={() => handleCopy(link.shortLink)}
-                    />
-                  </td>
-                  <td className="link-data-remarks">{link.remarks}</td>
-                  <td className="link-data-clicks">{link.clicks}</td>
-                  <td
-                    className={`link-data-status ${
-                      link.expiryDate
-                        ? new Date(link.expiryDate) > new Date()
-                          ? "active"
-                          : "inactive"
-                        : "active"
-                    }`}
-                  >
-                    {link.expiryDate
-                      ? new Date(link.expiryDate) > new Date()
-                        ? "Active"
-                        : "Inactive"
-                      : "Active"}
-                  </td>
-                  <td className="link-data-actions">
-                    <img
-                      src={edit}
-                      alt="Edit Icon"
-                      onClick={() => handleEdit(link)}
-                    />
-                    {isEditModalOpen && clickedLink && (
-                      <CreateLinkModal
-                        isEditModalOpen={isEditModalOpen}
-                        setIsEditModalOpen={setIsEditModalOpen}
-                        setNewLinkAdded={setNewLinkAdded}
-                        originalURL={clickedLink.originalLink}
-                        remarks={clickedLink.remarks}
-                        expiryDate={clickedLink.expiryDate}
-                        linkId={clickedLink._id}
-                      />
-                    )}
-                    <img
-                      src={deleteIcon}
-                      alt="Delete Icon"
-                      onClick={() => handleDelete(link)}
-                    />
-                    {linkDeleteModalOpen && (
-                      <DeleteModal
-                        setLinkDeleteModalOpen={setLinkDeleteModalOpen}
-                        linkDeleteModalOpen={linkDeleteModalOpen}
-                        finalDelete={finalDelete}
-                      />
-                    )}
-                  </td>
+      {isLoading ? (
+        <p>Loading..</p>
+      ) : (
+        <>
+          <table className="link-table">
+            <thead>
+              <tr>
+                <th className="link-date">
+                  Date{" "}
+                  <img
+                    src={dropdown}
+                    alt="Sort Date"
+                    onClick={() => sortDate()}
+                  />
+                </th>
+                <th className="link-original">Original Link</th>
+                <th className="link-shortlink">Short Link</th>
+                <th className="link-remarks">Remarks</th>
+                <th className="link-clicks">Clicks</th>
+                <th className="link-status">
+                  Status{" "}
+                  {showStatusOptions && (
+                    <div className="status-filter-dropdown">
+                      <select
+                        value={isStatus}
+                        onChange={(e) => handleSelectStatus(e)}
+                        className="status-dropdown"
+                      >
+                        <option value="all">All</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                      </select>
+                    </div>
+                  )}
+                  <img
+                    src={dropdown}
+                    alt="Sort status"
+                    onClick={() => handleStatusSort()}
+                  />
+                </th>
+                <th className="link-actions">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {userLinks.length == 0 ? (
+                <tr className="no-data">
+                  <td>No data found</td>
                 </tr>
-              );
-            })
+              ) : (
+                userLinks?.map((link) => {
+                  return (
+                    <tr key={link._id}>
+                      <td className="link-data-date">
+                        {createdDate(link.createdAt)}
+                      </td>
+                      <td className="link-data-original">
+                        {link.originalLink}
+                      </td>
+                      <td className="link-data-shortlink">
+                        {link.shortLink}{" "}
+                        <img
+                          src={copy}
+                          alt="Copy Icon"
+                          onClick={() => handleCopy(link.shortLink)}
+                        />
+                      </td>
+                      <td className="link-data-remarks">{link.remarks}</td>
+                      <td className="link-data-clicks">{link.clicks}</td>
+                      <td
+                        className={`link-data-status ${
+                          link.expiryDate
+                            ? new Date(link.expiryDate) > new Date()
+                              ? "active"
+                              : "inactive"
+                            : "active"
+                        }`}
+                      >
+                        {link.expiryDate
+                          ? new Date(link.expiryDate) > new Date()
+                            ? "Active"
+                            : "Inactive"
+                          : "Active"}
+                      </td>
+                      <td className="link-data-actions">
+                        <img
+                          src={edit}
+                          alt="Edit Icon"
+                          onClick={() => handleEdit(link)}
+                        />
+                        {isEditModalOpen && clickedLink && (
+                          <CreateLinkModal
+                            isEditModalOpen={isEditModalOpen}
+                            setIsEditModalOpen={setIsEditModalOpen}
+                            setNewLinkAdded={setNewLinkAdded}
+                            originalURL={clickedLink.originalLink}
+                            remarks={clickedLink.remarks}
+                            expiryDate={clickedLink.expiryDate}
+                            linkId={clickedLink._id}
+                          />
+                        )}
+                        <img
+                          src={deleteIcon}
+                          alt="Delete Icon"
+                          onClick={() => handleDelete(link)}
+                        />
+                        {linkDeleteModalOpen && (
+                          <DeleteModal
+                            setLinkDeleteModalOpen={setLinkDeleteModalOpen}
+                            linkDeleteModalOpen={linkDeleteModalOpen}
+                            finalDelete={finalDelete}
+                          />
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+          {count > 10 && (
+            <div className="link-paging">
+              <button
+                className={offset === 0 ? "disabled" : ""}
+                disabled={offset === 0}
+                onClick={() => setOffset((prevOffset) => prevOffset - 1)}
+              >
+                &lt;
+              </button>
+              {showPageNumbers()}
+              <button
+                className={offset * limit + limit >= count ? "disabled" : ""}
+                disabled={offset * limit + limit >= count}
+                onClick={() => setOffset((prevOffset) => prevOffset + 1)}
+              >
+                &gt;
+              </button>
+              <Toaster />
+            </div>
           )}
-        </tbody>
-      </table>
-      {count > 10 && (
-        <div className="link-paging">
-          <button
-            className={offset === 0 ? "disabled" : ""}
-            disabled={offset === 0}
-            onClick={() => setOffset((prevOffset) => prevOffset - 1)}
-          >
-            &lt;
-          </button>
-          {showPageNumbers()}
-          <button
-            className={offset * limit + limit >= count ? "disabled" : ""}
-            disabled={offset * limit + limit >= count}
-            onClick={() => setOffset((prevOffset) => prevOffset + 1)}
-          >
-            &gt;
-          </button>
-          <Toaster />
-        </div>
+        </>
       )}
     </div>
   );

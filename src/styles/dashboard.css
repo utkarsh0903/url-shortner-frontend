@@ -221,13 +221,90 @@
 }
 
 .active-tab {
-    background-color: #f3f7fd;
-    height: 3.1em;
-    display: flex;
-    align-items: center;
-    border-radius: 6px;
-    width: 13em;
+  background-color: #f3f7fd;
+  height: 3.1em;
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+  width: 13em;
   button {
     color: #1b48da !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .dashboard-container {
+    flex-direction: column;
+    width: 100vw;
+  }
+
+  .left-navbar {
+    border-bottom: 2px solid #f6f6f9;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    height: 3.5em;
+    .logo {
+      display: none;
+    }
+    .navbar {
+      margin-left: 0em;
+      ul {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        .active {
+          width: 10em;
+        }
+        li {
+          width: 10em;
+        }
+      }
+    }
+    .settings-btn {
+      width: 10em;
+      margin-left: 0em;
+      height: 3.5em;
+      border-top: 2px solid #f6f6f9;
+      border-bottom: 2px solid #f6f6f9;
+      button {
+        margin-left: 1em;
+        display: flex;
+      }
+    }
+  }
+  .content-section {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .left-navbar {
+    height: 3.5em;
+  }
+  .content-section {
+    .top-navbar {
+      .navbar-info {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .left-navbar {
+    height: 3em;
+  }
+  .content-section {
+    .top-navbar {
+      .hello-message {
+        width: auto;
+        margin-left: 0.5em;
+      }
+      .navbar-info {
+        width: auto;
+      }
+    }
   }
 }

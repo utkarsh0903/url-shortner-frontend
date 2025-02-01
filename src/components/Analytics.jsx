@@ -5,7 +5,8 @@ import "../styles/analytics.css";
 
 const Analytics = () => {
   const [userLinks, setUserLinks] = useState([]);
-  const [isdatesSorted, setIsDatesSorted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDatesSorted, setIsDatesSorted] = useState(false);
   const [unsortedDates, setUnsortedDates] = useState([]);
   const [limit, setLimit] = useState(10);
   const [offset, setOffset] = useState(0);
@@ -18,12 +19,14 @@ const Analytics = () => {
       return;
     }
     showLinkAnalytics();
-  }, [offset]);
+  }, [offset, isDatesSorted]);
 
   const showLinkAnalytics = async () => {
-    const res = await getLinkAnalytics({ limit, offset: offset * limit });
+    const res = await getLinkAnalytics({ limit, offset: offset * limit, 
+      isDatesSorted });
     if (res.status === 200) {
       const data = await res.json(res);
+      setIsLoading(false);
       setUserLinks(data.analyticsData);
       setCount(data.totalLinks);
     } else {
@@ -62,80 +65,80 @@ const Analytics = () => {
   };
 
   const sortDate = () => {
-    setIsDatesSorted((prevState) => {
-      const currentState = !prevState;
-      if (currentState) {
-        setUnsortedDates(userLinks);
-        const sortedDates = [...userLinks].sort(
-          (b, a) => new Date(a.createdAt) - new Date(b.createdAt)
-        );
-        setUserLinks(sortedDates);
-      } else {
-        setUserLinks(unsortedDates);
-      }
-      return currentState;
-    });
+    setIsDatesSorted((prev) => !prev);
   };
 
   return (
     <div className="analytic-container">
-      <table>
-        <thead>
-          <tr>
-            <th className="analytic-date">
-              Timestamp{" "}
-              <img src={dropdown} alt="Sort Date" onClick={() => sortDate()} />
-            </th>
-            <th className="analytic-original">Original Link</th>
-            <th className="analytic-shortlink">Short Link</th>
-            <th className="analytic-ipaddress">ip address</th>
-            <th className="analytic-device">User Device</th>
-          </tr>
-        </thead>
-        <tbody>
-          {userLinks.length == 0 ? (
-            <tr className="no-data">
-              <td>No data found</td>
-            </tr>
-          ) : (
-            userLinks?.map((link) => {
-              return (
-                <tr key={link._id}>
-                  <td className="analytic-data-date">
-                    {createdDate(link.createdAt)}
-                  </td>
-                  <td className="analytic-data-original">
-                    {link.linkId.originalLink}
-                  </td>
-                  <td className="analytic-data-shortlink">
-                    {link.linkId.shortLink}
-                  </td>
-                  <td className="analytic-data-ipaddress">{link.ipAddress}</td>
-                  <td className="analytic-data-device">{link.device}</td>
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+          <table>
+            <thead>
+              <tr>
+                <th className="analytic-date">
+                  Timestamp{" "}
+                  <img
+                    src={dropdown}
+                    alt="Sort Date"
+                    onClick={() => sortDate()}
+                  />
+                </th>
+                <th className="analytic-original">Original Link</th>
+                <th className="analytic-shortlink">Short Link</th>
+                <th className="analytic-ipaddress">ip address</th>
+                <th className="analytic-device">User Device</th>
+              </tr>
+            </thead>
+            <tbody>
+              {userLinks.length == 0 ? (
+                <tr className="no-data">
+                  <td>No data found</td>
                 </tr>
-              );
-            })
+              ) : (
+                userLinks?.map((link) => {
+                  return (
+                    <tr key={link._id}>
+                      <td className="analytic-data-date">
+                        {createdDate(link.createdAt)}
+                      </td>
+                      <td className="analytic-data-original">
+                        {link.linkId.originalLink}
+                      </td>
+                      <td className="analytic-data-shortlink">
+                        {link.linkId.shortLink}
+                      </td>
+                      <td className="analytic-data-ipaddress">
+                        {link.ipAddress}
+                      </td>
+                      <td className="analytic-data-device">{link.device}</td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+          {count > 10 && (
+            <div className="link-paging">
+              <button
+                className={offset === 0 ? "disabled" : ""}
+                disabled={offset === 0}
+                onClick={() => setOffset((prevOffset) => prevOffset - 1)}
+              >
+                &lt;
+              </button>
+              {showPageNumbers()}
+              <button
+                className={offset * limit + limit >= count ? "disabled" : ""}
+                disabled={offset * limit + limit >= count}
+                onClick={() => setOffset((prevOffset) => prevOffset + 1)}
+              >
+                &gt;
+              </button>
+            </div>
           )}
-        </tbody>
-      </table>
-      {count > 10 && (
-        <div className="link-paging">
-          <button
-            className={offset === 0 ? "disabled" : ""}
-            disabled={offset === 0}
-            onClick={() => setOffset((prevOffset) => prevOffset - 1)}
-          >
-            &lt;
-          </button>
-          {showPageNumbers()}
-          <button
-            className={offset * limit + limit >= count ? "disabled" : ""}
-            disabled={offset * limit + limit >= count}
-            onClick={() => setOffset((prevOffset) => prevOffset + 1)}
-          >
-            &gt;
-          </button>
-        </div>
+        </>
       )}
     </div>
   );
